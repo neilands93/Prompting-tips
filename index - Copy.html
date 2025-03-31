@@ -1,0 +1,562 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>I Facilitated This</title>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-color: #0e0f11;
+      --accent: #00f7ff;
+      --soft-glow: #00ffff44;
+      --text-light: #f2f2f2;
+      --text-muted: #999;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'JetBrains Mono', monospace;
+      background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+      color: var(--text-light);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      padding: 2rem;
+    }
+
+    main {
+      background: rgba(0, 0, 0, 0.5);
+      backdrop-filter: blur(16px);
+      border-radius: 20px;
+      padding: 3rem;
+      max-width: 800px;
+      width: 100%;
+      box-shadow: 0 0 20px #00000088;
+      text-align: center;
+      animation: fadeIn 1.2s ease-out;
+    }
+
+    h1 {
+      font-size: 2.5rem;
+      margin-bottom: 1rem;
+      color: var(--accent);
+      letter-spacing: 0.5px;
+    }
+
+    h2 {
+      color: var(--accent);
+      margin: 2rem 0 1.5rem;
+      text-align: center;
+      font-size: 1.8rem;
+    }
+
+    p {
+      font-size: 1.15rem;
+      line-height: 1.7;
+      margin: 1.2rem 0;
+      color: var(--text-light);
+    }
+
+    .carousel-box {
+      margin-top: 1.5rem;
+      font-size: 1.05rem;
+      padding: 1rem 1.5rem;
+      background-color: rgba(30, 30, 30, 0.8);
+      border-left: 4px solid var(--accent);
+      border-radius: 12px;
+      max-width: 600px;
+      margin-left: auto;
+      margin-right: auto;
+      box-shadow: 0 0 10px var(--soft-glow);
+    }
+
+    .carousel-item {
+      transition: opacity 0.4s ease;
+      opacity: 1;
+    }
+
+    .tagline {
+      margin-top: 1.5em;
+      font-size: 1rem;
+      color: var(--text-muted);
+      transition: all 0.3s ease-in-out;
+    }
+
+    .tagline:hover {
+      color: var(--text-light);
+      transform: scale(1.03);
+      text-shadow: 0 0 5px #ffffff33;
+    }
+
+    .badge {
+      margin-top: 2em;
+      display: inline-block;
+      padding: 0.6em 1.2em;
+      background: #111;
+      border: 1px solid var(--accent);
+      border-radius: 999px;
+      font-size: 0.85rem;
+      color: var(--accent);
+      box-shadow: 0 0 8px var(--soft-glow);
+      letter-spacing: 0.5px;
+      user-select: none;
+    }
+
+    /* Prompt Builder Styles */
+    .prompt-builder {
+      margin-top: 3rem;
+      background: rgba(0, 0, 0, 0.3);
+      border-radius: 20px;
+      padding: 2rem;
+      width: 100%;
+      text-align: left;
+    }
+    
+    .builder-fields {
+      display: grid;
+      gap: 1.5rem;
+      margin-bottom: 2rem;
+    }
+    
+    .field {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+    
+    label {
+      color: var(--accent);
+      font-size: 1rem;
+    }
+    
+    textarea {
+      background: rgba(30, 30, 30, 0.8);
+      border: 1px solid #333;
+      border-radius: 8px;
+      padding: 0.8rem;
+      color: var(--text-light);
+      font-family: 'JetBrains Mono', monospace;
+      resize: vertical;
+      min-height: 80px;
+      transition: border-color 0.3s ease;
+    }
+    
+    textarea:focus {
+      outline: none;
+      border-color: var(--accent);
+      box-shadow: 0 0 5px var(--soft-glow);
+    }
+    
+    textarea::placeholder {
+      color: var(--text-muted);
+      opacity: 0.7;
+    }
+    
+    .prompt-result {
+      margin-top: 2rem;
+    }
+
+    .result-title {
+      color: var(--text-light);
+      margin-bottom: 1rem;
+      font-size: 1.2rem;
+    }
+    
+    .result-box {
+      background: rgba(30, 30, 30, 0.8);
+      border-left: 4px solid var(--accent);
+      border-radius: 12px;
+      padding: 1.5rem;
+      position: relative;
+      min-height: 150px;
+      box-shadow: 0 0 10px var(--soft-glow);
+    }
+    
+    pre {
+      white-space: pre-wrap;
+      word-break: break-word;
+      color: var(--text-light);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.9rem;
+      line-height: 1.6;
+    }
+    
+    .copy-button {
+      position: absolute;
+      top: 1rem;
+      right: 1rem;
+      background: rgba(0, 0, 0, 0.5);
+      border: 1px solid var(--accent);
+      border-radius: 4px;
+      color: var(--accent);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.5rem 0.8rem;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.8rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    
+    .copy-button:hover:not(:disabled) {
+      background: rgba(0, 247, 255, 0.1);
+    }
+    
+    .copy-button:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    .copy-icon {
+      width: 16px;
+      height: 16px;
+      stroke: var(--accent);
+      stroke-width: 2;
+      fill: none;
+    }
+
+    .template-selector {
+      display: flex;
+      justify-content: center;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .template-button {
+      background: rgba(30, 30, 30, 0.8);
+      border: 1px solid #333;
+      border-radius: 8px;
+      padding: 0.5rem 1rem;
+      color: var(--text-light);
+      font-family: 'JetBrains Mono', monospace;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .template-button.active {
+      border-color: var(--accent);
+      box-shadow: 0 0 10px var(--soft-glow);
+      background: rgba(0, 247, 255, 0.1);
+    }
+
+    .template-button:hover {
+      border-color: var(--accent);
+    }
+    
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    
+    @media (max-width: 768px) {
+      main {
+        padding: 2rem;
+      }
+      
+      .prompt-builder {
+        padding: 1.5rem;
+      }
+      
+      textarea {
+        min-height: 60px;
+      }
+
+      h1 {
+        font-size: 2rem;
+      }
+
+      h2 {
+        font-size: 1.5rem;
+      }
+
+      .template-selector {
+        flex-direction: column;
+        align-items: center;
+        gap: 0.5rem;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <main>
+    <h1>Prompting Tips</h1>
+
+    <div class="carousel-box">
+      <div id="carousel" class="carousel-item">🧠 Prompt Tip: Be specific about the format you want.</div>
+    </div>
+
+    <p>
+      This site was built with the help of AI — not through years of coding, but through curiosity, a few prompts, and a willingness to explore what's possible.
+    </p>
+
+    <!-- Security Prompt Builder -->
+    <div class="prompt-builder">
+      <h2>Security Prompt Builder</h2>
+      
+      <div class="template-selector">
+        <button id="template1" class="template-button active">Conversational</button>
+        <button id="template2" class="template-button">Directive</button>
+        <button id="template3" class="template-button">Technical</button>
+      </div>
+      
+      <div class="builder-fields">
+        <div class="field">
+          <label for="goal">Goal</label>
+          <textarea 
+            id="goal" 
+            placeholder="Specific security-related information you need (e.g., 'Analyze potential vulnerabilities in our AWS S3 configuration')"
+          ></textarea>
+        </div>
+        
+        <div class="field">
+          <label for="context">Context</label>
+          <textarea 
+            id="context" 
+            placeholder="Why you need this information or how you plan to use it (e.g., 'Preparing for a security audit next month')"
+          ></textarea>
+        </div>
+        
+        <div class="field">
+          <label for="expectations">Expectations</label>
+          <textarea 
+            id="expectations" 
+            placeholder="Format or target audience for the response (e.g., 'Technical report for our security team with prioritized action items')"
+          ></textarea>
+        </div>
+        
+        <div class="field">
+          <label for="source">Source</label>
+          <textarea 
+            id="source" 
+            placeholder="Known information, data sources, or plugins to use (e.g., 'Use our recent penetration test results attached below')"
+          ></textarea>
+        </div>
+      </div>
+      
+      <div class="prompt-result">
+        <h3 class="result-title">Your Generated Prompt</h3>
+        <div class="result-box">
+          <pre id="finalPrompt">Your prompt will appear here as you fill in the fields above...</pre>
+          <button 
+            id="copyButton"
+            class="copy-button" 
+            disabled
+            aria-label="Copy to clipboard"
+          >
+            <svg class="copy-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+              <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+            </svg>
+            <span id="copyText">Copy</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="tagline">Locally hosted, fully vibe-facilitated.</div>
+    <div class="badge">#BuiltWithAI #FacilitatedNotCoded</div>
+  </main>
+
+  <script>
+    // Carousel Tips
+    const tips = [
+      "🧠 Prompt Tip: Be specific about the format you want.",
+      "📌 Give examples in your prompt — it helps a ton.",
+      "🎯 State the goal: 'Summarize this like I'm 5' vs just 'Summarize this'.",
+      "🧱 Break down big prompts into smaller steps.",
+      "🕵️ Add context: Tell the AI who it's acting as.",
+      "🧪 Try different phrasings — prompts are experiments.",
+      "💡 Say what *not* to do: 'Don't include an intro.'",
+      "⚠️ Mention tone if it matters: 'Write it boldly, no fluff.'",
+      "🚀 Prompt iteratively — ask, refine, repeat.",
+      "📦 Use structure: Lists, tables, bullets help AI format better."
+    ];
+
+    let index = 0;
+    const carousel = document.getElementById("carousel");
+
+    setInterval(() => {
+      carousel.style.opacity = 0;
+      setTimeout(() => {
+        index = (index + 1) % tips.length;
+        carousel.textContent = tips[index];
+        carousel.style.opacity = 1;
+      }, 400);
+    }, 5000);
+
+    // Prompt Builder
+    const goalInput = document.getElementById('goal');
+    const contextInput = document.getElementById('context');
+    const expectationsInput = document.getElementById('expectations');
+    const sourceInput = document.getElementById('source');
+    const finalPromptElement = document.getElementById('finalPrompt');
+    const copyButton = document.getElementById('copyButton');
+    const copyText = document.getElementById('copyText');
+    
+    // Template selector buttons
+    const template1Button = document.getElementById('template1');
+    const template2Button = document.getElementById('template2');
+    const template3Button = document.getElementById('template3');
+    let activeTemplate = 'conversational';
+
+    // Set active template
+    template1Button.addEventListener('click', () => {
+      setActiveTemplate('conversational', template1Button);
+    });
+    
+    template2Button.addEventListener('click', () => {
+      setActiveTemplate('directive', template2Button);
+    });
+    
+    template3Button.addEventListener('click', () => {
+      setActiveTemplate('technical', template3Button);
+    });
+    
+    function setActiveTemplate(template, button) {
+      // Remove active class from all buttons
+      template1Button.classList.remove('active');
+      template2Button.classList.remove('active');
+      template3Button.classList.remove('active');
+      
+      // Add active class to clicked button
+      button.classList.add('active');
+      
+      // Set active template
+      activeTemplate = template;
+      
+      // Update prompt with new template
+      updatePrompt();
+    }
+
+    // Generate prompt based on template and inputs
+    function updatePrompt() {
+      const goal = goalInput.value.trim();
+      const context = contextInput.value.trim();
+      const expectations = expectationsInput.value.trim();
+      const source = sourceInput.value.trim();
+      
+      // Check if we have any content
+      if (!goal && !context && !expectations && !source) {
+        finalPromptElement.textContent = "Your prompt will appear here as you fill in the fields above...";
+        copyButton.disabled = true;
+        return;
+      }
+      
+      let prompt = '';
+      
+      // Apply different templates
+      switch (activeTemplate) {
+        case 'conversational':
+          prompt = generateConversationalPrompt(goal, context, expectations, source);
+          break;
+        case 'directive':
+          prompt = generateDirectivePrompt(goal, context, expectations, source);
+          break;
+        case 'technical':
+          prompt = generateTechnicalPrompt(goal, context, expectations, source);
+          break;
+        default:
+          prompt = generateConversationalPrompt(goal, context, expectations, source);
+      }
+      
+      finalPromptElement.textContent = prompt;
+      copyButton.disabled = false;
+    }
+    
+    function generateConversationalPrompt(goal, context, expectations, source) {
+      let prompt = 'I need your expertise on a security matter. ';
+      
+      if (goal) {
+        prompt += `Could you help me ${goal.toLowerCase()}? `;
+      }
+      
+      if (context) {
+        prompt += `I'm asking because ${context.toLowerCase()}. `;
+      }
+      
+      if (expectations) {
+        prompt += `I'd like your response to be in the form of ${expectations.toLowerCase()}. `;
+      }
+      
+      if (source) {
+        prompt += `Please use the following information as reference: ${source}`;
+      }
+      
+      return prompt.trim();
+    }
+    
+    function generateDirectivePrompt(goal, context, expectations, source) {
+      let prompt = 'Security Analysis Request:\n\n';
+      
+      if (goal) {
+        prompt += `Provide a comprehensive analysis of ${goal}.\n\n`;
+      }
+      
+      if (context) {
+        prompt += `Background: ${context}\n\n`;
+      }
+      
+      if (expectations) {
+        prompt += `Deliverable: ${expectations}\n\n`;
+      }
+      
+      if (source) {
+        prompt += `Reference Material: ${source}`;
+      }
+      
+      return prompt.trim();
+    }
+    
+    function generateTechnicalPrompt(goal, context, expectations, source) {
+      let prompt = 'You are a cybersecurity expert with deep knowledge of security protocols, vulnerability assessment, and threat mitigation.\n\n';
+      
+      if (goal && context) {
+        prompt += `Task: ${goal}.\nRationale: ${context}.\n\n`;
+      } else if (goal) {
+        prompt += `Task: ${goal}.\n\n`;
+      } else if (context) {
+        prompt += `Situation: ${context}.\n\n`;
+      }
+      
+      if (expectations) {
+        prompt += `Output Format: ${expectations}.\n\n`;
+      }
+      
+      if (source) {
+        prompt += `Data Sources: ${source}\n\n`;
+      }
+      
+      prompt += 'Ensure your analysis is accurate, actionable, and aligned with industry best practices.';
+      
+      return prompt.trim();
+    }
+
+    // Copy to clipboard
+    copyButton.addEventListener('click', async () => {
+      try {
+        await navigator.clipboard.writeText(finalPromptElement.textContent);
+        copyText.textContent = "Copied!";
+        setTimeout(() => {
+          copyText.textContent = "Copy";
+        }, 2000);
+      } catch (err) {
+        console.error('Failed to copy: ', err);
+      }
+    });
+
+    // Add event listeners to all inputs
+    goalInput.addEventListener('input', updatePrompt);
+    contextInput.addEventListener('input', updatePrompt);
+    expectationsInput.addEventListener('input', updatePrompt);
+    sourceInput.addEventListener('input', updatePrompt);
+  </script>
+</body>
+</html>
