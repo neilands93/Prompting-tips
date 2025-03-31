@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Prompting Tips</title>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0f1117;
+      --accent: #00f7ff;
+      --muted: #777;
+      --text: #f4f4f4;
+      --card: #1b1e27;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: 'JetBrains Mono', monospace;
+      background: linear-gradient(to right, #0f2027, #203a43, #2c5364);
+      color: var(--text);
+      padding: 2rem;
+    }
+
+    main {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 2rem;
+      background: rgba(0, 0, 0, 0.4);
+      border-radius: 16px;
+      backdrop-filter: blur(8px);
+      box-shadow: 0 0 16px rgba(0, 247, 255, 0.1);
+    }
+
+    h1 {
+      text-align: center;
+      font-size: 2.5rem;
+      color: var(--accent);
+    }
+
+    .carousel-box {
+      margin: 2rem auto;
+      background: var(--card);
+      padding: 1rem;
+      border-left: 4px solid var(--accent);
+      border-radius: 10px;
+      max-width: 600px;
+      text-align: center;
+    }
+
+    .field {
+      margin-bottom: 1rem;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 0.25rem;
+      color: var(--accent);
+    }
+
+    textarea {
+      width: 100%;
+      padding: 0.75rem;
+      border-radius: 6px;
+      background: var(--card);
+      border: 1px solid #444;
+      color: var(--text);
+      resize: vertical;
+    }
+
+    .result-box {
+      background: var(--card);
+      padding: 1.5rem;
+      border-radius: 10px;
+      position: relative;
+      margin-top: 2rem;
+    }
+
+    pre {
+      white-space: pre-wrap;
+      word-wrap: break-word;
+      color: var(--text);
+      margin: 0;
+    }
+
+    .copy-button {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      background: #000;
+      color: var(--accent);
+      border: 1px solid var(--accent);
+      padding: 0.3rem 0.6rem;
+      font-size: 0.8rem;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>Prompting Tips</h1>
+
+    <div class="carousel-box" id="carousel">💡 Prompt Tip: Be specific about the format you want.</div>
+
+    <div class="field">
+      <label for="goal">Goal</label>
+      <textarea id="goal" placeholder="What do you want the AI to do?"></textarea>
+    </div>
+    <div class="field">
+      <label for="context">Context</label>
+      <textarea id="context" placeholder="Why do you need this? What's the background?"></textarea>
+    </div>
+    <div class="field">
+      <label for="expect">Expectations</label>
+      <textarea id="expect" placeholder="What format/length/style do you expect?"></textarea>
+    </div>
+    <div class="field">
+      <label for="source">Source</label>
+      <textarea id="source" placeholder="Any facts, links, or references to use?"></textarea>
+    </div>
+
+    <div class="result-box">
+      <button class="copy-button" onclick="copyPrompt()">📋 Copy</button>
+      <pre id="output">Your prompt will appear here as you fill in the fields above...</pre>
+    </div>
+  </main>
+
+  <script>
+    const goal = document.getElementById('goal');
+    const context = document.getElementById('context');
+    const expect = document.getElementById('expect');
+    const source = document.getElementById('source');
+    const output = document.getElementById('output');
+
+    function buildPrompt() {
+      let prompt = '';
+      if (goal.value) prompt += `I want you to ${goal.value}.\n`;
+      if (context.value) prompt += `Here's the context: ${context.value}.\n`;
+      if (expect.value) prompt += `Please format it like this: ${expect.value}.\n`;
+      if (source.value) prompt += `Use this reference: ${source.value}`;
+      output.textContent = prompt || 'Your prompt will appear here as you fill in the fields above...';
+    }
+
+    goal.addEventListener('input', buildPrompt);
+    context.addEventListener('input', buildPrompt);
+    expect.addEventListener('input', buildPrompt);
+    source.addEventListener('input', buildPrompt);
+
+    function copyPrompt() {
+      navigator.clipboard.writeText(output.textContent).then(() => {
+        alert('Copied!');
+      });
+    }
+
+    const tips = [
+      "💡 Prompt Tip: Be specific about the format you want.",
+      "🎯 Include your audience: 'Explain it to a non-technical user.'",
+      "📦 Add structure like lists, tables, or bullet points.",
+      "🧠 Tell the AI who it's acting as (e.g., 'You are a CISO...')",
+      "🚀 Prompt iteratively — refine as you go."
+    ];
+    let tipIndex = 0;
+    setInterval(() => {
+      tipIndex = (tipIndex + 1) % tips.length;
+      document.getElementById('carousel').textContent = tips[tipIndex];
+    }, 6000);
+  </script>
+</body>
+</html>
