@@ -155,7 +155,7 @@
       expect.addEventListener('input', buildPrompt);
       source.addEventListener('input', buildPrompt);
 
-      function copyPrompt() {
+      window.copyPrompt = function () {
         if (navigator.clipboard) {
           navigator.clipboard.writeText(output.textContent).then(() => {
             alert('Copied!');
@@ -183,9 +183,10 @@
         "🎯 Include your audience: 'Explain it to a non-technical user.'",
         "📦 Add structure like lists, tables, or bullet points.",
         "🧠 Tell the AI who it's acting as (e.g., 'You are a CTO...')",
-        "🚀 Prompt iteratively — refine as you go."
+        "🚀 Prompt iteratively — refine as you go.",
         "🧠 Honestly, anything could have been written here."
       ];
+
       let tipIndex = 0;
       setInterval(() => {
         tipIndex = (tipIndex + 1) % tips.length;
