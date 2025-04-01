@@ -18,13 +18,46 @@
       box-sizing: border-box;
     }
 
+    html, body {
+      height: 100%;
+      margin: 0;
+      padding: 0;
+    }
+
     body {
       font-family: 'Inter', sans-serif;
       background: linear-gradient(135deg, #0e0e10, #1a1a1a);
       color: var(--text);
-      margin: 0;
-      padding: 0;
       line-height: 1.6;
+    }
+
+    #page {
+      position: relative;
+      min-height: 100%;
+      overflow-x: hidden;
+    }
+
+    .neon-left, .neon-right {
+      position: fixed;
+      top: 0;
+      height: 100%;
+      width: 12px;
+      background: var(--accent);
+      box-shadow:
+        0 0 50px rgba(255, 76, 96, 0.4),
+        0 0 100px rgba(255, 76, 96, 0.2),
+        0 0 200px rgba(255, 76, 96, 0.1);
+      animation: softGlow 8s ease-in-out infinite alternate;
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    .neon-left { left: 0; }
+    .neon-right { right: 0; }
+
+    @keyframes softGlow {
+      0% { opacity: 0.6; }
+      100% { opacity: 1; }
     }
 
     h2 {
@@ -70,6 +103,8 @@
       padding: 2rem;
       max-width: 800px;
       margin: 0 auto;
+      position: relative;
+      z-index: 1;
     }
 
     #outputBox {
@@ -112,41 +147,48 @@
       color: var(--muted);
       background-color: #0b0b0d;
       border-top: 1px solid #1c1c1c;
+      position: relative;
+      z-index: 1;
     }
   </style>
 </head>
 <body>
-  <section id="tips">
-    <div id="carousel">💡 Prompt Tip: Be specific about the format you want.</div>
-  </section>
+  <div id="page">
+    <div class="neon-left"></div>
+    <div class="neon-right"></div>
 
-  <section id="builder">
-    <h2 style="text-align: center;">Prompt Builder</h2>
-    <div class="field">
-      <label for="goal">Goal</label>
-      <input type="text" id="goal" placeholder="What do you want the AI to do?">
-    </div>
-    <div class="field">
-      <label for="context">Context</label>
-      <input type="text" id="context" placeholder="Why do you need this or how will it be used?">
-    </div>
-    <div class="field">
-      <label for="expectations">Expectations</label>
-      <input type="text" id="expectations" placeholder="Format, audience, or tone expected">
-    </div>
-    <div style="display: flex; justify-content: space-between; align-items: center;">
-      <button class="copy-btn" id="clearBtn">Clear All</button>
-      <button class="copy-btn" id="copyBtn">Copy Prompt</button>
-    </div>
-    <div>
-      <h3>Generated Prompt</h3>
-      <pre id="outputBox">Your prompt will appear here...</pre>
-    </div>
-  </section>
+    <section id="tips">
+      <div id="carousel">💡 Prompt Tip: Be specific about the format you want.</div>
+    </section>
 
-  <footer>
-    Made by AI with style, put together by a human.
-  </footer>
+    <section id="builder">
+      <h2 style="text-align: center;">Prompt Builder</h2>
+      <div class="field">
+        <label for="goal">Goal</label>
+        <input type="text" id="goal" placeholder="What do you want the AI to do?">
+      </div>
+      <div class="field">
+        <label for="context">Context</label>
+        <input type="text" id="context" placeholder="Why do you need this or how will it be used?">
+      </div>
+      <div class="field">
+        <label for="expectations">Expectations</label>
+        <input type="text" id="expectations" placeholder="Format, audience, or tone expected">
+      </div>
+      <div style="display: flex; justify-content: space-between; align-items: center;">
+        <button class="copy-btn" id="clearBtn">Clear All</button>
+        <button class="copy-btn" id="copyBtn">Copy Prompt</button>
+      </div>
+      <div>
+        <h3>Generated Prompt</h3>
+        <pre id="outputBox">Your prompt will appear here...</pre>
+      </div>
+    </section>
+
+    <footer>
+      Made by AI with style, put together by a human.
+    </footer>
+  </div>
 
   <script>
     window.addEventListener('DOMContentLoaded', () => {
