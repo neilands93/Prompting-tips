@@ -61,6 +61,9 @@
       border-radius: 10px;
       font-size: 1rem;
       backdrop-filter: blur(10px);
+      min-height: 3em;
+      display: flex;
+      align-items: center;
     }
 
     #builder {
@@ -78,6 +81,8 @@
       font-family: monospace;
       box-shadow: 0 0 10px transparent;
       transition: box-shadow 0.4s ease;
+      white-space: pre-wrap;
+      word-wrap: break-word;
     }
 
     #outputBox.highlight {
@@ -165,9 +170,7 @@
 </head>
 <body>
   <section id="tips">
-    <div id="carousel">
-      💡 Prompt Tip: Be specific about the format you want.
-    </div>
+    <div id="carousel">💡 Prompt Tip: Be specific about the format you want.</div>
   </section>
 
   <section id="builder">
@@ -212,7 +215,7 @@
   </section>
 
   <footer>
-    Assembled by a human, designed by an AI with great taste.<br>
+    Made by AI with style, put together by a human.<br>
     <a href="#">GitHub</a> |
     <a href="#">Feedback</a> |
     <a href="#">Credits</a> |
@@ -221,6 +224,23 @@
 
   <script>
     window.addEventListener('DOMContentLoaded', () => {
+      const tips = [
+        "Be specific about the format you want.",
+        "Include examples when possible.",
+        "Break down large tasks into smaller ones.",
+        "Mention the target audience.",
+        "Say what not to do.",
+        "Use clear, action-oriented language.",
+      ];
+
+      const carousel = document.getElementById("carousel");
+      let tipIndex = 0;
+
+      setInterval(() => {
+        tipIndex = (tipIndex + 1) % tips.length;
+        carousel.textContent = `💡 Prompt Tip: ${tips[tipIndex]}`;
+      }, 5000);
+
       const goal = document.getElementById('goal');
       const context = document.getElementById('context');
       const expectations = document.getElementById('expectations');
