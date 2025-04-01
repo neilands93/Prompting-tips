@@ -96,12 +96,22 @@
       color: var(--accent);
       border-radius: 6px;
       cursor: pointer;
-      transition: background 0.3s;
+      transition: background 0.3s, transform 0.2s;
     }
 
-    .copy-btn:hover {
+    .copy-btn:active {
+      transform: scale(0.95);
       background: var(--accent);
       color: #fff;
+    }
+
+    footer {
+      padding: 2rem;
+      text-align: center;
+      font-size: 0.9rem;
+      color: var(--muted);
+      background-color: #0b0b0d;
+      border-top: 1px solid #1c1c1c;
     }
   </style>
 </head>
@@ -125,8 +135,8 @@
       <input type="text" id="expectations" placeholder="Format, audience, or tone expected">
     </div>
     <div style="display: flex; justify-content: space-between; align-items: center;">
-      <button class="copy-btn" onclick="clearAll()">Clear All</button>
-      <button class="copy-btn" onclick="copyGeneratedPrompt()">Copy Prompt</button>
+      <button class="copy-btn" id="clearBtn">Clear All</button>
+      <button class="copy-btn" id="copyBtn">Copy Prompt</button>
     </div>
     <div>
       <h3>Generated Prompt</h3>
@@ -135,7 +145,7 @@
   </section>
 
   <footer>
-    Made by AI with style, put together by a human.<br>
+    Made by AI with style, put together by a human.
   </footer>
 
   <script>
@@ -161,6 +171,8 @@
       const context = document.getElementById('context');
       const expectations = document.getElementById('expectations');
       const outputBox = document.getElementById('outputBox');
+      const copyBtn = document.getElementById('copyBtn');
+      const clearBtn = document.getElementById('clearBtn');
 
       function updatePrompt() {
         const g = goal.value.trim();
@@ -172,7 +184,8 @@
         if (c) prompt += ` This is needed because ${c.toLowerCase()}.`;
         if (e) prompt += ` Format your answer as ${e.toLowerCase()}.`;
 
-        outputBox.textContent = prompt.trim() || 'Your prompt will appear here...';
+        const finalPrompt = prompt.trim() || 'Your prompt will appear here...';
+        outputBox.textContent = finalPrompt;
         outputBox.classList.add('highlight');
         setTimeout(() => outputBox.classList.remove('highlight'), 400);
       }
@@ -181,21 +194,24 @@
         el.addEventListener('input', updatePrompt);
       });
 
-      window.copyGeneratedPrompt = function () {
+      copyBtn.addEventListener('click', () => {
         const text = outputBox.textContent;
         if (text && text !== "Your prompt will appear here...") {
           navigator.clipboard.writeText(text).then(() => {
-            alert("Prompt copied to clipboard!");
+            copyBtn.textContent = "Copied!";
+            setTimeout(() => copyBtn.textContent = "Copy Prompt", 1500);
           });
         }
-      }
+      });
 
-      window.clearAll = function () {
+      clearBtn.addEventListener('click', () => {
         goal.value = "";
         context.value = "";
         expectations.value = "";
         outputBox.textContent = "Your prompt will appear here...";
-      }
+        clearBtn.textContent = "Cleared!";
+        setTimeout(() => clearBtn.textContent = "Clear All", 1500);
+      });
     });
   </script>
 </body>
