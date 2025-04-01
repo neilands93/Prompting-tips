@@ -3,23 +3,32 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Prompt Builder with Tabs</title>
+  <title>Prompt Builder with Style</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
   <style>
+    :root {
+      --bg-color: #0e0e10;
+      --surface-color: #1a1a1a;
+      --text-color: #f3f4f6;
+      --accent-color: #ff4c60;
+      --glow-color: rgba(255, 76, 96, 0.3);
+    }
+
     body {
       font-family: 'Inter', sans-serif;
-      background: #0e0e10;
-      color: #f3f4f6;
+      background: var(--bg-color);
+      color: var(--text-color);
       margin: 0;
       padding: 2rem;
       display: flex;
       flex-direction: column;
       align-items: center;
       min-height: 100vh;
+      overflow-x: hidden;
     }
 
     h1, h2 {
-      color: #ff4c60;
+      color: var(--accent-color);
       margin-bottom: 1rem;
       text-align: center;
     }
@@ -33,16 +42,16 @@
     .tab-buttons button {
       padding: 0.5rem 1rem;
       border-radius: 6px;
-      border: 1px solid #ff4c60;
+      border: 1px solid var(--accent-color);
       background: transparent;
-      color: #ff4c60;
+      color: var(--accent-color);
       cursor: pointer;
       transition: background 0.3s;
     }
 
     .tab-buttons button.active,
     .tab-buttons button:hover {
-      background: #ff4c60;
+      background: var(--accent-color);
       color: white;
     }
 
@@ -71,19 +80,20 @@
       padding: 0.6rem;
       border-radius: 6px;
       border: 1px solid #333;
-      background: #1a1a1a;
-      color: #f3f4f6;
+      background: var(--surface-color);
+      color: var(--text-color);
     }
 
     .output {
       margin-top: 2rem;
-      background: #1a1a1a;
-      border-left: 4px solid #ff4c60;
+      background: var(--surface-color);
+      border-left: 4px solid var(--accent-color);
       padding: 1rem;
       border-radius: 8px;
       white-space: pre-wrap;
       word-wrap: break-word;
       position: relative;
+      box-shadow: 0 0 20px var(--glow-color);
     }
 
     .buttons {
@@ -96,15 +106,15 @@
     button.clear, button.copy, button.send {
       padding: 0.5rem 1rem;
       border-radius: 6px;
-      border: 1px solid #ff4c60;
+      border: 1px solid var(--accent-color);
       background: transparent;
-      color: #ff4c60;
+      color: var(--accent-color);
       cursor: pointer;
       transition: 0.3s;
     }
 
     button.clear:hover, button.copy:hover, button.send:hover {
-      background: #ff4c60;
+      background: var(--accent-color);
       color: white;
     }
 
@@ -112,9 +122,25 @@
       margin-top: 0.5rem;
       text-align: right;
     }
+
+    .neon-bar {
+      position: fixed;
+      top: 0;
+      bottom: 0;
+      width: 10px;
+      background: linear-gradient(to bottom, transparent, var(--accent-color), transparent);
+      box-shadow: 0 0 60px 20px var(--glow-color);
+      z-index: 0;
+    }
+
+    .neon-bar.left { left: 0; }
+    .neon-bar.right { right: 0; }
   </style>
 </head>
 <body>
+  <div class="neon-bar left"></div>
+  <div class="neon-bar right"></div>
+
   <h1>AI Prompt Builder</h1>
 
   <div class="tab-buttons">
@@ -238,9 +264,9 @@
       const c = document.getElementById('context').value.trim();
       const e = document.getElementById('expectations').value.trim();
       let classic = "";
-      if (g) classic += `Your task is to ${g.toLowerCase()}.`;
-      if (c) classic += ` This is needed because ${c.toLowerCase()}.`;
-      if (e) classic += ` Format your answer as ${e.toLowerCase()}.`;
+      if (g) classic += `Your task is to ${g}.`;
+      if (c) classic += ` This is needed because ${c}.`;
+      if (e) classic += ` Format your answer as ${e}.`;
       document.getElementById('outputClassic').textContent = classic.trim() || "Your prompt will appear here...";
 
       const task = document.getElementById("task").value.trim();
