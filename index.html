@@ -42,13 +42,14 @@
       position: fixed;
       top: 0;
       height: 100%;
-      width: 12px;
+      width: 8px;
       background: var(--accent);
       box-shadow:
-        0 0 50px rgba(255, 76, 96, 0.4),
-        0 0 100px rgba(255, 76, 96, 0.2),
-        0 0 200px rgba(255, 76, 96, 0.1);
-      animation: softGlow 8s ease-in-out infinite alternate;
+        0 0 20px rgba(255, 76, 96, 0.5),
+        0 0 80px rgba(255, 76, 96, 0.3),
+        0 0 160px rgba(255, 76, 96, 0.2),
+        0 0 240px rgba(255, 76, 96, 0.1);
+      animation: softPulse 6s ease-in-out infinite alternate;
       z-index: 0;
       pointer-events: none;
     }
@@ -56,7 +57,7 @@
     .neon-left { left: 0; }
     .neon-right { right: 0; }
 
-    @keyframes softGlow {
+    @keyframes softPulse {
       0% { opacity: 0.6; }
       100% { opacity: 1; }
     }
@@ -120,15 +121,17 @@
       border-left: 4px solid var(--accent);
       font-family: monospace;
       box-shadow: 0 0 10px transparent;
-      transition: box-shadow 0.4s ease;
+      transition: box-shadow 0.4s ease, opacity 0.4s ease-in-out;
       white-space: pre-wrap;
       word-wrap: break-word;
       max-width: 600px;
       margin: 0 auto;
+      opacity: 1;
     }
 
-    #outputBox.highlight {
-      box-shadow: 0 0 10px var(--accent);
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
     }
 
     .copy-btn {
@@ -155,7 +158,7 @@
       background-color: #0b0b0d;
       border-top: 1px solid #1c1c1c;
       position: relative;
-      z-index: 1;
+      z-index: 2;
     }
 
     @media (max-width: 768px) {
@@ -241,24 +244,36 @@
       const copyBtn = document.getElementById('copyBtn');
       const clearBtn = document.getElementById('clearBtn');
 
-      function updatePrompt() {
-        const g = goal.value.trim();
-        const c = context.value.trim();
-        const e = expectations.value.trim();
+      let lastPrompt = "";
+      let debounceTimer;
 
-        let prompt = "";
-        if (g) prompt += `Your task is to ${g.toLowerCase()}.`;
-        if (c) prompt += ` This is needed because ${c.toLowerCase()}.`;
-        if (e) prompt += ` Format your answer as ${e.toLowerCase()}.`;
+      function updatePromptDebounced() {
+        clearTimeout(debounceTimer);
+        debounceTimer = setTimeout(() => {
+          const g = goal.value.trim();
+          const c = context.value.trim();
+          const e = expectations.value.trim();
 
-        const finalPrompt = prompt.trim() || 'Your prompt will appear here...';
-        outputBox.textContent = finalPrompt;
-        outputBox.classList.add('highlight');
-        setTimeout(() => outputBox.classList.remove('highlight'), 400);
+          let prompt = "";
+          if (g) prompt += `Your task is to ${g.toLowerCase()}.`;
+          if (c) prompt += ` This is needed because ${c.toLowerCase()}.`;
+          if (e) prompt += ` Format your answer as ${e.toLowerCase()}.`;
+
+          const finalPrompt = prompt.trim() || 'Your prompt will appear here...';
+
+          if (finalPrompt !== lastPrompt) {
+            outputBox.style.opacity = 0;
+            setTimeout(() => {
+              outputBox.textContent = finalPrompt;
+              outputBox.style.opacity = 1;
+              lastPrompt = finalPrompt;
+            }, 300);
+          }
+        }, 500);
       }
 
       [goal, context, expectations].forEach(el => {
-        el.addEventListener('input', updatePrompt);
+        el.addEventListener('input', updatePromptDebounced);
       });
 
       copyBtn.addEventListener('click', () => {
@@ -276,6 +291,7 @@
         context.value = "";
         expectations.value = "";
         outputBox.textContent = "Your prompt will appear here...";
+        lastPrompt = "Your prompt will appear here...";
         clearBtn.textContent = "Cleared!";
         setTimeout(() => clearBtn.textContent = "Clear All", 1500);
       });
