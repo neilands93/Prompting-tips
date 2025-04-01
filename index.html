@@ -3,17 +3,17 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Enhanced Prompt Builder</title>
+  <title>Enhanced Prompt Builder</title> <!-- Keeping enhanced title for UI improvements -->
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
   <style>
-    /* --- CSS Variables for Theming and Consistency --- */
+    /* --- CSS Variables --- */
     :root {
       --bg-color: #0e0e10;
-      --surface-color: #1a1a1a; /* Inputs, output bg */
+      --surface-color: #1a1a1a;
       --text-color: #f3f4f6;
-      --text-muted-color: #a1a1aa; /* Placeholder text */
+      --text-muted-color: #a1a1aa;
       --accent-color: #ff4c60;
-      --accent-rgb: 255, 76, 96; /* RGB values for rgba() */
+      --accent-rgb: 255, 76, 96;
       --accent-text-color: #ffffff;
       --border-color: #333;
       --border-color-focus: var(--accent-color);
@@ -27,232 +27,141 @@
       --spacing-xl: 2rem;
       --font-family: 'Inter', sans-serif;
       --transition-speed: 0.2s;
-      --sidebar-width: 80px; /* Width of the neon effect */
-      --sidebar-opacity: 0.5; /* Base opacity of the sidebar gradient */
+      --sidebar-width: 80px;
+      --sidebar-opacity: 0.5;
+      /* Removed warning color variables as Reset All is gone */
     }
 
     /* --- Base Styles --- */
-    *, *::before, *::after {
-      box-sizing: border-box;
-    }
-
+    *, *::before, *::after { box-sizing: border-box; }
     body {
       font-family: var(--font-family);
       background: var(--bg-color);
       color: var(--text-color);
       margin: 0;
-      /* Add padding to body to prevent content from overlapping sidebars visually */
       padding: var(--spacing-xl) var(--sidebar-width);
       display: flex;
       flex-direction: column;
       align-items: center;
       min-height: 100vh;
       line-height: 1.6;
-      position: relative; /* Needed for z-index stacking if sidebars were behind */
-      overflow-x: hidden; /* Prevent potential horizontal scroll */
+      position: relative;
+      overflow-x: hidden;
     }
 
     /* --- Neon Sidebars --- */
     .neon-sidebar {
-        position: fixed;
-        top: 0;
-        bottom: 0;
-        width: var(--sidebar-width);
-        /* z-index: 0; Optional: Use if you need precise layering */
-        pointer-events: none; /* Allow clicks to pass through */
-        /* filter: blur(3px); Optional: Add blur for softer glow */
+        position: fixed; top: 0; bottom: 0;
+        width: var(--sidebar-width); pointer-events: none;
     }
-
     #sidebar-left {
         left: 0;
-        background: linear-gradient(to right,
-            rgba(var(--accent-rgb), var(--sidebar-opacity)) 0%,
-            rgba(var(--accent-rgb), calc(var(--sidebar-opacity) * 0.5)) 30%, /* Fade intensity */
-            rgba(var(--accent-rgb), 0) 100% /* Fade to transparent */
-        );
+        background: linear-gradient(to right, rgba(var(--accent-rgb), var(--sidebar-opacity)) 0%, rgba(var(--accent-rgb), calc(var(--sidebar-opacity) * 0.5)) 30%, rgba(var(--accent-rgb), 0) 100%);
     }
-
     #sidebar-right {
         right: 0;
-        background: linear-gradient(to left,
-             rgba(var(--accent-rgb), var(--sidebar-opacity)) 0%,
-             rgba(var(--accent-rgb), calc(var(--sidebar-opacity) * 0.5)) 30%,
-             rgba(var(--accent-rgb), 0) 100%
-        );
+        background: linear-gradient(to left, rgba(var(--accent-rgb), var(--sidebar-opacity)) 0%, rgba(var(--accent-rgb), calc(var(--sidebar-opacity) * 0.5)) 30%, rgba(var(--accent-rgb), 0) 100%);
     }
-
 
     /* --- Typography --- */
-    h1, h2 {
-      color: var(--accent-color);
-      margin-bottom: var(--spacing-md);
-      text-align: center;
-    }
+    h1, h2 { color: var(--accent-color); margin-bottom: var(--spacing-md); text-align: center; }
     h1 { margin-bottom: var(--spacing-lg); }
-
-    label {
-      font-weight: 600;
-      display: block;
-      margin-bottom: var(--spacing-sm);
-      font-size: 0.9rem;
-    }
+    label { font-weight: 600; display: block; margin-bottom: var(--spacing-sm); font-size: 0.9rem; }
 
     /* --- Tab Interface --- */
-    .tab-buttons {
-      display: flex;
-      gap: var(--spacing-md);
-      margin-bottom: var(--spacing-xl);
-    }
-
-    .tab-buttons button {
-      padding: var(--spacing-sm) var(--spacing-md);
-      border-radius: var(--border-radius-md);
-      border: 1px solid var(--accent-color);
-      background: transparent;
-      color: var(--accent-color);
-      cursor: pointer;
-      font-family: inherit;
-      font-size: 0.9rem;
-      transition: background var(--transition-speed) ease, color var(--transition-speed) ease, transform var(--transition-speed) ease;
-    }
-
-    .tab-buttons button:hover {
-      background: var(--accent-color);
-      color: var(--accent-text-color);
-    }
-
-    .tab-buttons button.active {
-      background: var(--accent-color);
-      color: var(--accent-text-color);
-      font-weight: 600;
-    }
-
-    .tab-buttons button:active {
-       transform: scale(0.97);
-    }
+    .tab-buttons { display: flex; gap: var(--spacing-md); margin-bottom: var(--spacing-xl); }
+    .tab-buttons button { padding: var(--spacing-sm) var(--spacing-md); border-radius: var(--border-radius-md); border: 1px solid var(--accent-color); background: transparent; color: var(--accent-color); cursor: pointer; font-family: inherit; font-size: 0.9rem; transition: background var(--transition-speed) ease, color var(--transition-speed) ease, transform var(--transition-speed) ease; }
+    .tab-buttons button:hover { background: var(--accent-color); color: var(--accent-text-color); }
+    .tab-buttons button.active { background: var(--accent-color); color: var(--accent-text-color); font-weight: 600; }
+    .tab-buttons button:active { transform: scale(0.97); }
 
     /* --- Tab Sections --- */
-    .tab-section {
-      display: none;
-      width: 100%;
-      max-width: 700px; /* Max width of the *content* area */
-    }
-
-    .tab-section.active {
-      display: block;
-      animation: fadeIn var(--transition-speed) ease forwards;
-    }
-
-    @keyframes fadeIn {
-      from { opacity: 0; }
-      to { opacity: 1; }
-    }
+    .tab-section { display: none; width: 100%; max-width: 700px; }
+    .tab-section.active { display: block; animation: fadeIn var(--transition-speed) ease forwards; }
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
     /* --- Form Elements --- */
-    .form-group {
-      margin-bottom: var(--spacing-lg);
+    .form-group { margin-bottom: var(--spacing-lg); }
+    select, input[type="text"] { width: 100%; padding: 0.7rem; border-radius: var(--border-radius-md); border: 1px solid var(--border-color); background: var(--surface-color); color: var(--text-color); font-family: inherit; font-size: 1rem; transition: border-color var(--transition-speed) ease, box-shadow var(--transition-speed) ease; }
+    select:focus, input[type="text"]:focus { outline: none; border-color: var(--border-color-focus); box-shadow: 0 0 0 2px rgba(var(--accent-rgb), 0.3); }
+    ::placeholder { color: var(--text-muted-color); opacity: 1; }
+
+
+    /* --- Autofill Style Override --- */
+    /* Target WebKit-based browsers (Chrome, Safari, Edge, Opera) */
+    input:-webkit-autofill,
+    input:-webkit-autofill:hover,
+    input:-webkit-autofill:focus,
+    input:-webkit-autofill:active {
+        /* 1. Force Text Color: Use -webkit-text-fill-color */
+        -webkit-text-fill-color: var(--text-color) !important;
+
+        /* 2. Force Background: Use a large inset box-shadow */
+        /* This paints over the browser's default background color */
+        box-shadow: 0 0 0px 1000px var(--surface-color) inset !important;
+
+        /* 3. Optional: Force Font Family if it changes */
+        font-family: var(--font-family);
+
+        /* 4. Disable Browser's Transition: Prevents flicker */
+        transition: background-color 5000s ease-in-out 0s;
     }
 
-    select, input[type="text"] {
-      width: 100%;
-      padding: 0.7rem;
-      border-radius: var(--border-radius-md);
-      border: 1px solid var(--border-color);
-      background: var(--surface-color);
-      color: var(--text-color);
-      font-family: inherit;
-      font-size: 1rem;
-      transition: border-color var(--transition-speed) ease, box-shadow var(--transition-speed) ease;
+    /* You might also need styles for textarea if you add one later */
+    /*
+    textarea:-webkit-autofill,
+    textarea:-webkit-autofill:hover,
+    textarea:-webkit-autofill:focus {
+      -webkit-text-fill-color: var(--text-color) !important;
+      box-shadow: 0 0 0px 1000px var(--surface-color) inset !important;
+      transition: background-color 5000s ease-in-out 0s;
     }
-
-    select:focus, input[type="text"]:focus {
-      outline: none;
-      border-color: var(--border-color-focus);
-      box-shadow: 0 0 0 2px rgba(var(--accent-rgb), 0.3); /* Use RGB var */
-    }
-
-    ::placeholder {
-        color: var(--text-muted-color);
-        opacity: 1;
-    }
+    */
 
     /* --- Output Area --- */
     .output {
-      margin-top: var(--spacing-xl);
-      background: var(--surface-color);
-      border-left: 4px solid var(--accent-color);
-      padding: var(--spacing-md) var(--spacing-lg);
-      border-radius: var(--border-radius-lg);
-      white-space: pre-wrap;
-      word-wrap: break-word;
-      position: relative;
-      min-height: 6em;
-      color: var(--text-muted-color);
+      margin-top: var(--spacing-xl); background: var(--surface-color); border-left: 4px solid var(--accent-color);
+      padding: var(--spacing-md) var(--spacing-lg); border-radius: var(--border-radius-lg); white-space: pre-wrap;
+      word-wrap: break-word; position: relative; min-height: 6em; color: var(--text-muted-color);
       transition: background var(--transition-speed) ease;
     }
-    .output.has-content {
-        color: var(--text-color);
-    }
+    .output.has-content { color: var(--text-color); }
 
     /* --- Action Buttons --- */
-    .buttons {
-      margin-top: var(--spacing-md);
-      display: flex;
-      gap: var(--spacing-md);
-      flex-wrap: wrap;
-    }
+    .buttons { margin-top: var(--spacing-md); display: flex; gap: var(--spacing-md); flex-wrap: wrap; align-items: center; }
+    button.action-button { padding: var(--spacing-sm) var(--spacing-md); border-radius: var(--border-radius-md); border: 1px solid var(--accent-color); background: transparent; color: var(--accent-color); cursor: pointer; font-family: inherit; font-size: 0.9rem; transition: background var(--transition-speed) ease, color var(--transition-speed) ease, transform var(--transition-speed) ease, opacity var(--transition-speed) ease; }
+    button.action-button:hover { background: var(--accent-color); color: var(--accent-text-color); }
+    button.action-button:active { transform: scale(0.97); }
+    button.action-button.feedback { background: var(--accent-color); color: var(--accent-text-color); opacity: 0.8; cursor: default; }
 
-    button.action-button {
-      padding: var(--spacing-sm) var(--spacing-md);
-      border-radius: var(--border-radius-md);
-      border: 1px solid var(--accent-color);
-      background: transparent;
-      color: var(--accent-color);
-      cursor: pointer;
-      font-family: inherit;
-      font-size: 0.9rem;
-      transition: background var(--transition-speed) ease, color var(--transition-speed) ease, transform var(--transition-speed) ease, opacity var(--transition-speed) ease;
-    }
+    /* Removed Reset All Button Style */
 
-    button.action-button:hover {
-      background: var(--accent-color);
-      color: var(--accent-text-color);
-    }
-
-    button.action-button:active {
-       transform: scale(0.97);
-    }
-
-    button.action-button.feedback {
-        background: var(--accent-color);
-        color: var(--accent-text-color);
-        opacity: 0.8;
-        cursor: default;
-    }
-
-    .copy-under {
-      margin-top: var(--spacing-sm);
-      text-align: right;
-    }
+    .copy-under { margin-top: var(--spacing-sm); text-align: right; }
 
     /* --- Feedback Highlight --- */
-    .highlight-feedback {
-      animation: highlight var(--transition-speed) ease-out;
+    .highlight-feedback { animation: highlight var(--transition-speed) ease-out; }
+    @keyframes highlight { 0% { background-color: rgba(var(--accent-rgb), 0.2); } 100% { background-color: var(--surface-color); } }
+
+    /* Removed Global Actions Footer Style (or keep empty if planning future buttons) */
+    /*
+    .global-actions {
+        width: 100%;
+        max-width: 700px;
+        margin-top: var(--spacing-xl);
+        padding-top: var(--spacing-lg);
+        border-top: 1px solid var(--border-color);
+        display: flex;
+        justify-content: flex-end;
     }
-    @keyframes highlight {
-      0% { background-color: rgba(var(--accent-rgb), 0.2); } /* Use RGB var */
-      100% { background-color: var(--surface-color); }
-    }
+    */
 
   </style>
 </head>
 <body>
 
-  <!-- Neon Sidebars (Add these elements first) -->
   <div id="sidebar-left" class="neon-sidebar"></div>
   <div id="sidebar-right" class="neon-sidebar"></div>
 
-  <!-- Existing Content Starts Here -->
   <h1>AI Prompt Builder</h1>
 
   <div class="tab-buttons" role="tablist">
@@ -264,21 +173,22 @@
     <h2>Classic Prompt Builder</h2>
     <div class="form-group">
       <label for="goal">Goal</label>
-      <input type="text" id="goal" placeholder="Be specific: e.g., 'Write a python script to...', 'Summarize the key points of...'">
+      <!-- Removed name attribute, not needed without saving -->
+      <input type="text" id="goal" placeholder="Be specific: e.g., 'Summarize this text...', 'Brainstorm ideas for...'">
     </div>
     <div class="form-group">
       <label for="context">Context</label>
-      <input type="text" id="context" placeholder="Optional: Background info, purpose, 'for a blog post', 'for internal team'">
+      <input type="text" id="context" placeholder="Optional: Background info, purpose...">
     </div>
     <div class="form-group">
       <label for="expectations">Expectations</label>
-      <input type="text" id="expectations" placeholder="Optional: Tone (formal, casual), format (list, paragraph), length">
+      <input type="text" id="expectations" placeholder="Optional: Tone, format, length...">
     </div>
     <div class="buttons">
-      <button class="action-button clear-classic">Clear</button>
+      <button class="action-button clear-classic">Clear Classic</button>
       <button class="action-button send-to-combo">Send to Combo</button>
     </div>
-    <div class="output" id="outputClassic">Your prompt will appear here...</div>
+    <div class="output" id="outputClassic" aria-live="polite">Your prompt will appear here...</div>
     <div class="copy-under"><button class="action-button copy-button" data-target="outputClassic">Copy</button></div>
   </div>
 
@@ -298,14 +208,16 @@
         <option value="hypothetical">Use a hypothetical scenario</option>
       </select>
     </div>
-    <div class="form-group">
+<div class="form-group">
       <label for="role">Assume a Role</label>
       <select id="role">
         <option value="">None</option>
-        <option value="logistics consultant">Logistics consultant</option>
-        <option value="hr specialist">HR specialist</option>
-        <option value="data analyst">Data analyst</option>
-        <option value="ai assistant">AI assistant</option>
+        <option value="Strategic Advisor">Strategic Advisor</option>
+        <option value="Project Manager">Project Manager</option>
+        <option value="Business Analyst">Business Analyst</option>
+        <option value="Marketing Specialist">Marketing Specialist</option>
+        <option value="Subject Matter Expert">Subject Matter Expert</option>
+        <option value="Internal Communicator">Internal Communicator</option>
       </select>
     </div>
     <div class="form-group">
@@ -319,137 +231,151 @@
       </select>
     </div>
     <div class="buttons">
-      <button class="action-button clear-combo">Clear</button>
+      <button class="action-button clear-combo">Clear Combo</button>
     </div>
-    <div class="output" id="outputCombo">Your generated prompt will appear here...</div>
+    <div class="output" id="outputCombo" aria-live="polite">Your generated prompt will appear here...</div>
     <div class="copy-under"><button class="action-button copy-button" data-target="outputCombo">Copy</button></div>
   </div>
-  <!-- Existing Content Ends Here -->
+
+  <!-- Removed Global Actions Area -->
+  <!--
+  <div class="global-actions">
+      Removed Button Here
+  </div>
+  -->
+
 
   <script>
-    // --- DOM Element References ---
+    // --- Debounce Utility ---
+    function debounce(func, wait) {
+        let timeout;
+        return function executedFunction(...args) {
+            const later = () => {
+                clearTimeout(timeout);
+                func(...args);
+            };
+            clearTimeout(timeout);
+            timeout = setTimeout(later, wait);
+        };
+    }
+
+    // --- DOM Element References & Constants ---
+    // Removed LS_KEY
+    const DEBOUNCE_DELAY = 300;
+
     const tabButtons = document.querySelectorAll('.tab-buttons button[role="tab"]');
     const tabPanels = document.querySelectorAll('.tab-section[role="tabpanel"]');
 
+    // Get all input/select elements by ID now
+    const inputElements = document.querySelectorAll('#panel-classic input, #panel-classic select, #panel-combo input, #panel-combo select');
+
+    // Use specific IDs directly now, removed inputMap
     const classicGoal = document.getElementById('goal');
     const classicContext = document.getElementById('context');
     const classicExpectations = document.getElementById('expectations');
-    const outputClassic = document.getElementById('outputClassic');
-    const clearClassicBtn = document.querySelector('.clear-classic');
-    const sendToComboBtn = document.querySelector('.send-to-combo');
-    const copyClassicBtn = document.querySelector('.copy-button[data-target="outputClassic"]');
-
     const comboTask = document.getElementById('task');
     const comboReasoning = document.getElementById('reasoning');
     const comboRole = document.getElementById('role');
     const comboFormat = document.getElementById('format');
+
+    const outputClassic = document.getElementById('outputClassic');
     const outputCombo = document.getElementById('outputCombo');
+    const clearClassicBtn = document.querySelector('.clear-classic');
+    const sendToComboBtn = document.querySelector('.send-to-combo');
+    const copyClassicBtn = document.querySelector('.copy-button[data-target="outputClassic"]');
     const clearComboBtn = document.querySelector('.clear-combo');
     const copyComboBtn = document.querySelector('.copy-button[data-target="outputCombo"]');
-
-    const allInputs = document.querySelectorAll('input[type="text"], select');
+    // Removed resetAllBtn reference
 
     const placeholderClassic = "Your prompt will appear here...";
     const placeholderCombo = "Your generated prompt will appear here...";
-
     const originalCopyText = 'Copy';
     const originalSendText = 'Send to Combo';
-
 
     // --- Function Definitions ---
 
     function switchTab(targetPanelId) {
-      tabPanels.forEach(panel => {
-        panel.classList.toggle('active', panel.id === targetPanelId);
-      });
-
-      tabButtons.forEach(button => {
-        const isSelected = button.getAttribute('aria-controls') === targetPanelId;
-        button.classList.toggle('active', isSelected);
-        button.setAttribute('aria-selected', isSelected);
-      });
-      updatePrompts();
+        tabPanels.forEach(panel => panel.classList.toggle('active', panel.id === targetPanelId));
+        tabButtons.forEach(button => {
+            const isSelected = button.getAttribute('aria-controls') === targetPanelId;
+            button.classList.toggle('active', isSelected);
+            button.setAttribute('aria-selected', isSelected);
+        });
+        updatePrompts();
     }
 
     function resetButtonState(button, originalText) {
-        if (button._feedbackTimeoutId) {
-            clearTimeout(button._feedbackTimeoutId);
-            button._feedbackTimeoutId = null;
-        }
-        button.textContent = originalText;
-        button.classList.remove('feedback');
+        if (button._feedbackTimeoutId) { clearTimeout(button._feedbackTimeoutId); button._feedbackTimeoutId = null; }
+        button.textContent = originalText; button.classList.remove('feedback');
     }
 
     function clearClassic() {
-      classicGoal.value = "";
-      classicContext.value = "";
-      classicExpectations.value = "";
-      resetButtonState(copyClassicBtn, originalCopyText);
-      resetButtonState(sendToComboBtn, originalSendText);
-      updatePrompts();
+        classicGoal.value = "";
+        classicContext.value = "";
+        classicExpectations.value = "";
+        resetButtonState(copyClassicBtn, originalCopyText);
+        resetButtonState(sendToComboBtn, originalSendText);
+        // No saveInputs() call needed
+        updatePrompts();
     }
 
     function clearCombo() {
-      comboTask.value = "";
-      comboReasoning.value = "";
-      comboRole.value = "";
-      comboFormat.value = "";
-      resetButtonState(copyComboBtn, originalCopyText);
-      updatePrompts();
+        comboTask.value = "";
+        comboReasoning.value = "";
+        comboRole.value = "";
+        comboFormat.value = "";
+        resetButtonState(copyComboBtn, originalCopyText);
+        // No saveInputs() call needed
+        updatePrompts();
     }
 
+    // --- Removed Reset All Function ---
+
     async function copyText(elementId, button) {
-      const textElement = document.getElementById(elementId);
-      const textToCopy = textElement.textContent;
-      const originalText = originalCopyText;
-
-      resetButtonState(button, originalText);
-
-      if (textToCopy === placeholderClassic || textToCopy === placeholderCombo || !textToCopy.trim()) {
-          button.textContent = "Nothing to copy!";
-          button.classList.add('feedback');
-           button._feedbackTimeoutId = setTimeout(() => {
-               resetButtonState(button, originalText);
-           }, 1500);
-          return;
-      }
-
-      try {
-        await navigator.clipboard.writeText(textToCopy);
-        button.textContent = "Copied!";
-        button.classList.add('feedback');
-      } catch (err) {
-        console.error("Clipboard copy failed: ", err);
-        button.textContent = "Copy Failed";
-        button.classList.add('feedback');
-      } finally {
-        button._feedbackTimeoutId = setTimeout(() => {
-          resetButtonState(button, originalText);
-        }, 1500);
-      }
+        const textElement = document.getElementById(elementId);
+        const textToCopy = textElement.textContent;
+        const originalText = originalCopyText;
+        resetButtonState(button, originalText);
+        if (textToCopy === placeholderClassic || textToCopy === placeholderCombo || !textToCopy.trim()) {
+            button.textContent = "Nothing to copy!"; button.classList.add('feedback');
+            button._feedbackTimeoutId = setTimeout(() => { resetButtonState(button, originalText); }, 1500);
+            return;
+        }
+        try {
+            await navigator.clipboard.writeText(textToCopy);
+            button.textContent = "Copied!"; button.classList.add('feedback');
+        } catch (err) {
+            console.error("Clipboard copy failed: ", err);
+            button.textContent = "Copy Failed"; button.classList.add('feedback');
+        } finally {
+            button._feedbackTimeoutId = setTimeout(() => { resetButtonState(button, originalText); }, 1500);
+        }
     }
 
     function sendToCombo() {
-      resetButtonState(sendToComboBtn, originalSendText);
-
-      const classicOutputText = outputClassic.textContent;
-      if (classicOutputText && classicOutputText !== placeholderClassic && classicOutputText.trim()) {
-        comboTask.value = classicOutputText;
-        switchTab('panel-combo');
-        updatePrompts();
-
-        comboTask.classList.add('highlight-feedback');
-        setTimeout(() => comboTask.classList.remove('highlight-feedback'), 500);
-      } else {
-        sendToComboBtn.textContent = "Nothing to Send";
-        sendToComboBtn.classList.add('feedback');
-        sendToComboBtn._feedbackTimeoutId = setTimeout(() => {
-             resetButtonState(sendToComboBtn, originalSendText);
-        }, 1500);
-      }
+        resetButtonState(sendToComboBtn, originalSendText);
+        const classicOutputText = outputClassic.textContent;
+        if (classicOutputText && classicOutputText !== placeholderClassic && classicOutputText.trim()) {
+            comboTask.value = classicOutputText; // Use specific ID
+            switchTab('panel-combo');
+            // No saveInputs() call needed
+            updatePrompts();
+            comboTask.classList.add('highlight-feedback'); // Use specific ID
+            setTimeout(() => comboTask.classList.remove('highlight-feedback'), 500);
+        } else {
+            sendToComboBtn.textContent = "Nothing to Send"; sendToComboBtn.classList.add('feedback');
+            sendToComboBtn._feedbackTimeoutId = setTimeout(() => { resetButtonState(sendToComboBtn, originalSendText); }, 1500);
+        }
     }
 
+    // --- Removed Save and Load Input Data Functions ---
+
+    /**
+     * Updates both prompt output areas based on current input values.
+     * (Now uses specific element IDs)
+     */
     function updatePrompts() {
+      // --- Classic Prompt Logic ---
       const g = classicGoal.value.trim();
       const c = classicContext.value.trim();
       const e = classicExpectations.value.trim();
@@ -457,64 +383,44 @@
       if (g) classicPrompt += `Your task is to ${g}.`;
       if (c) classicPrompt += ` ${g ? 'T' : 'Your task requires understanding that t'}his is needed because ${c}.`;
       if (e) classicPrompt += ` ${ (g || c) ? 'F' : 'f'}ormat your answer as ${e}.`;
-
       outputClassic.textContent = classicPrompt.trim() || placeholderClassic;
       outputClassic.classList.toggle('has-content', classicPrompt.trim() !== '');
 
-
+      // --- Combo Prompt Logic ---
       const task = comboTask.value.trim();
       const reasoning = comboReasoning.value;
       const role = comboRole.value;
       const format = comboFormat.value;
       let comboPrompt = "";
-
       if (role) comboPrompt += `Act as a ${role}. `;
-      if (task) {
-        let formattedTask = task.charAt(0).toUpperCase() + task.slice(1);
-        if (!formattedTask.endsWith('.')) formattedTask += '.';
-         comboPrompt += `${formattedTask} `;
-      }
-      if (reasoning) {
-        switch (reasoning) {
-          case "step-by-step": comboPrompt += "Explain step-by-step. "; break;
-          case "compare": comboPrompt += "Compare and contrast the options. "; break;
-          case "proscons": comboPrompt += "List the pros and cons. "; break;
-          case "hypothetical": comboPrompt += "Use a hypothetical scenario. "; break;
-        }
-      }
-      if (format) {
-         comboPrompt += `Format your answer as ${format}.`;
-      }
-
+      if (task) { let formattedTask = task.charAt(0).toUpperCase() + task.slice(1); if (!formattedTask.endsWith('.')) formattedTask += '.'; comboPrompt += `${formattedTask} `; }
+      if (reasoning) { switch (reasoning) { case "step-by-step": comboPrompt += "Explain step-by-step. "; break; case "compare": comboPrompt += "Compare and contrast the options. "; break; case "proscons": comboPrompt += "List the pros and cons. "; break; case "hypothetical": comboPrompt += "Use a hypothetical scenario. "; break; } }
+      if (format) { comboPrompt += `Format your answer as ${format}.`; }
       outputCombo.textContent = comboPrompt.trim() || placeholderCombo;
       outputCombo.classList.toggle('has-content', comboPrompt.trim() !== '');
     }
 
+    // --- Debounced Update Function ---
+    // Renamed as it no longer saves
+    const debouncedUpdatePrompts = debounce(updatePrompts, DEBOUNCE_DELAY);
+
 
     // --- Event Listeners ---
-    tabButtons.forEach(button => {
-      button.addEventListener('click', () => {
-        switchTab(button.getAttribute('aria-controls'));
-      });
-    });
+    tabButtons.forEach(button => button.addEventListener('click', () => switchTab(button.getAttribute('aria-controls'))));
 
-    allInputs.forEach(el => {
-      el.addEventListener('input', updatePrompts);
-    });
+    // Use the debounced function for text inputs and selects
+    inputElements.forEach(el => el.addEventListener('input', debouncedUpdatePrompts));
 
     clearClassicBtn.addEventListener('click', clearClassic);
     clearComboBtn.addEventListener('click', clearCombo);
     sendToComboBtn.addEventListener('click', sendToCombo);
-
-    copyClassicBtn.addEventListener('click', () => {
-        copyText('outputClassic', copyClassicBtn);
-    });
-    copyComboBtn.addEventListener('click', () => {
-        copyText('outputCombo', copyComboBtn);
-    });
+    copyClassicBtn.addEventListener('click', () => copyText('outputClassic', copyClassicBtn));
+    copyComboBtn.addEventListener('click', () => copyText('outputCombo', copyComboBtn));
+    // Removed Reset All listener
 
     // --- Initial Setup ---
-    updatePrompts();
+    // Removed loadInputs() call
+    updatePrompts(); // Update display based on initial (empty) values
 
   </script>
 </body>
