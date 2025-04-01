@@ -134,45 +134,64 @@
   </main>
 
   <script>
-    const goal = document.getElementById('goal');
-    const context = document.getElementById('context');
-    const expect = document.getElementById('expect');
-    const source = document.getElementById('source');
-    const output = document.getElementById('output');
+    document.addEventListener('DOMContentLoaded', () => {
+      const goal = document.getElementById('goal');
+      const context = document.getElementById('context');
+      const expect = document.getElementById('expect');
+      const source = document.getElementById('source');
+      const output = document.getElementById('output');
 
-    function buildPrompt() {
-      let prompt = '';
-      if (goal.value) prompt += `I want you to ${goal.value}.\n`;
-      if (context.value) prompt += `Here's the context: ${context.value}.\n`;
-      if (expect.value) prompt += `Please format it like this: ${expect.value}.\n`;
-      if (source.value) prompt += `Use this reference: ${source.value}`;
-      output.textContent = prompt || 'Your prompt will appear here as you fill in the fields above...';
-    }
+      function buildPrompt() {
+        let prompt = '';
+        if (goal.value) prompt += `I want you to ${goal.value}.\n`;
+        if (context.value) prompt += `Here's the context: ${context.value}.\n`;
+        if (expect.value) prompt += `Please format it like this: ${expect.value}.\n`;
+        if (source.value) prompt += `Use this reference: ${source.value}`;
+        output.textContent = prompt || 'Your prompt will appear here as you fill in the fields above...';
+      }
 
-    goal.addEventListener('input', buildPrompt);
-    context.addEventListener('input', buildPrompt);
-    expect.addEventListener('input', buildPrompt);
-    source.addEventListener('input', buildPrompt);
+      goal.addEventListener('input', buildPrompt);
+      context.addEventListener('input', buildPrompt);
+      expect.addEventListener('input', buildPrompt);
+      source.addEventListener('input', buildPrompt);
 
-    function copyPrompt() {
-      navigator.clipboard.writeText(output.textContent).then(() => {
-        alert('Copied!');
-      });
-    }
+      function copyPrompt() {
+        if (navigator.clipboard) {
+          navigator.clipboard.writeText(output.textContent).then(() => {
+            alert('Copied!');
+          }).catch(err => {
+            alert('Failed to copy: ' + err);
+          });
+        } else {
+          const textArea = document.createElement('textarea');
+          textArea.value = output.textContent;
+          document.body.appendChild(textArea);
+          textArea.focus();
+          textArea.select();
+          try {
+            document.execCommand('copy');
+            alert('Copied using fallback!');
+          } catch (err) {
+            alert('Fallback: Oops, unable to copy');
+          }
+          document.body.removeChild(textArea);
+        }
+      }
 
-    const tips = [
-      "💡 Prompt Tip: Be specific about the format you want.",
-      "🎯 Include your audience: 'Explain it to a non-technical user.'",
-      "📦 Add structure like lists, tables, or bullet points.",
-      "🧠 Tell the AI who it's acting as (e.g., 'You are a CTO...')",
-      "🚀 Prompt iteratively — refine as you go."
-      "🧠 Honestly, anything could have been written here."
-    ];
-    let tipIndex = 0;
-    setInterval(() => {
-      tipIndex = (tipIndex + 1) % tips.length;
-      document.getElementById('carousel').textContent = tips[tipIndex];
-    }, 6000);
+      const tips = [
+        "💡 Prompt Tip: Be specific about the format you want.",
+        "🎯 Include your audience: 'Explain it to a non-technical user.'",
+        "📦 Add structure like lists, tables, or bullet points.",
+        "🧠 Tell the AI who it's acting as (e.g., 'You are a CTO...')",
+        "🚀 Prompt iteratively — refine as you go."
+        "🧠 Honestly, anything could have been written here."
+      ];
+      let tipIndex = 0;
+      setInterval(() => {
+        tipIndex = (tipIndex + 1) % tips.length;
+        document.getElementById('carousel').textContent = tips[tipIndex];
+      }, 6000);
+    });
   </script>
 </body>
 </html>
