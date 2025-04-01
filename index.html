@@ -12,186 +12,175 @@
       --text: #fcecec;
       --card: #2a0f0f;
     }
-
-    * {
-      box-sizing: border-box;
-    }
-
     body {
-      margin: 0;
       font-family: 'Noto Sans', sans-serif;
-      background: linear-gradient(to right, #1a0a0a, #2c0f0f, #3a1111);
+      background: linear-gradient(135deg, #1a0a0a, #2c0f0f, #3a1111);
       color: var(--text);
-      padding: 2rem;
+      margin: 0;
+      padding: 0;
     }
-
-    main {
-      max-width: 800px;
-      margin: 0 auto;
-      padding: 2rem;
-      background: rgba(30, 0, 0, 0.5);
-      border-radius: 16px;
-      backdrop-filter: blur(8px);
-      box-shadow: 0 0 16px rgba(217, 15, 41, 0.2);
+    .checkbox-group {
+      margin-top: 1.5rem;
     }
-
-    h1 {
+    .checkbox-group label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-size: 0.95rem;
+      color: var(--text);
+    }
+    .checkbox-group input[type="checkbox"] {
+      margin-right: 0.5rem;
+    }
+    #examples {
+      padding: 4rem 2rem;
+      background-color: var(--card);
       text-align: center;
-      font-size: 2.5rem;
+    }
+    #examples h2 {
+      font-size: 2rem;
+      margin-bottom: 2rem;
       color: var(--accent);
     }
-
-    .carousel-box {
-      margin: 2rem auto;
-      background: var(--card);
-      padding: 1rem;
-      border-left: 4px solid var(--accent);
-      border-radius: 10px;
-      max-width: 600px;
-      text-align: center;
-      min-height: 4.5rem;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+    .example-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 2rem;
+      max-width: 1000px;
+      margin: 0 auto;
     }
-
-    .field {
+    .example-card {
+      background: rgba(255, 255, 255, 0.03);
+      padding: 1rem;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(217, 15, 41, 0.1);
+      transition: transform 0.2s ease;
+    }
+    .example-card:hover {
+      transform: scale(1.03);
+    }
+    .example-intent {
+      font-weight: bold;
+      color: var(--accent);
+      margin-bottom: 0.5rem;
+    }
+    .example-output {
+      font-size: 0.95rem;
+      color: var(--text);
       margin-bottom: 1rem;
     }
-
-    label {
-      display: block;
-      margin-bottom: 0.25rem;
-      color: var(--accent);
-    }
-
-    textarea {
-      width: 100%;
-      padding: 0.75rem;
-      border-radius: 6px;
-      background: var(--card);
-      border: 1px solid #660000;
-      color: var(--text);
-      resize: vertical;
-    }
-
-    .result-box {
-      background: var(--card);
-      padding: 1.5rem;
-      border-radius: 10px;
-      position: relative;
-      margin-top: 2rem;
-    }
-
-    pre {
-      white-space: pre-wrap;
-      word-wrap: break-word;
-      color: var(--text);
-      margin: 0;
-    }
-
-    .copy-button {
-      position: absolute;
-      top: 10px;
-      right: 10px;
-      background: #1a0000;
-      color: var(--accent);
+    .copy-btn {
+      padding: 0.4rem 0.8rem;
+      font-size: 0.85rem;
       border: 1px solid var(--accent);
-      padding: 0.3rem 0.6rem;
-      font-size: 0.8rem;
-      border-radius: 4px;
+      background: transparent;
+      color: var(--accent);
+      border-radius: 5px;
       cursor: pointer;
+      transition: background 0.3s;
+    }
+    .copy-btn:hover {
+      background: var(--accent);
+      color: #fff;
+    }
+    footer {
+      padding: 2rem;
+      text-align: center;
+      font-size: 0.9rem;
+      color: var(--muted);
+      background-color: #140a0a;
+      border-top: 1px solid #330c0c;
+    }
+    footer a {
+      color: var(--accent);
+      text-decoration: none;
+      margin: 0 0.5rem;
+    }
+    footer a:hover {
+      text-decoration: underline;
     }
   </style>
 </head>
 <body>
-  <main>
-    <h1>Prompting Tips</h1>
+  <!-- Examples Section -->
+  <section id="examples">
+    <h2>Prompt Examples</h2>
+    <div class="example-grid">
+      <div class="example-card">
+        <div class="example-intent">Summarize a research paper</div>
+        <div class="example-output">Summarize this research paper in plain English with bullet points. Use markdown formatting.</div>
+        <button class="copy-btn" onclick="copyExample(this)">Copy</button>
+      </div>
+      <div class="example-card">
+        <div class="example-intent">Act as a tour guide</div>
+        <div class="example-output">You're a witty local tour guide in Rome. Share 3 interesting, lesser-known facts about the Colosseum.</div>
+        <button class="copy-btn" onclick="copyExample(this)">Copy</button>
+      </div>
+      <div class="example-card">
+        <div class="example-intent">Code explanation</div>
+        <div class="example-output">Explain the following Python code to a beginner and include a line-by-line breakdown.</div>
+        <button class="copy-btn" onclick="copyExample(this)">Copy</button>
+      </div>
+    </div>
+  </section>
 
-    <div class="carousel-box" id="carousel">💡 Prompt Tip: Be specific about the format you want.</div>
-
-    <div class="field">
-      <label for="goal">Goal</label>
-      <textarea id="goal" placeholder="What do you want the AI to do?"></textarea>
-    </div>
-    <div class="field">
-      <label for="context">Context</label>
-      <textarea id="context" placeholder="Why do you need this? What's the background?"></textarea>
-    </div>
-    <div class="field">
-      <label for="expect">Expectations</label>
-      <textarea id="expect" placeholder="What format/length/style do you expect?"></textarea>
-    </div>
-    <div class="field">
-      <label for="source">Source</label>
-      <textarea id="source" placeholder="Any facts, links, or references to use?"></textarea>
-    </div>
-
-    <div class="result-box">
-      <button class="copy-button" onclick="copyPrompt()">📋 Copy</button>
-      <pre id="output">Your prompt will appear here as you fill in the fields above...</pre>
-    </div>
-  </main>
+  <!-- Footer Section -->
+  <footer>
+    Made by humans, enhanced by AI.<br>
+    <a href="#">GitHub</a> |
+    <a href="#">Feedback</a> |
+    <a href="#">Credits</a> |
+    <a href="#">Privacy</a>
+  </footer>
 
   <script>
-    document.addEventListener('DOMContentLoaded', () => {
-      const goal = document.getElementById('goal');
-      const context = document.getElementById('context');
-      const expect = document.getElementById('expect');
-      const source = document.getElementById('source');
-      const output = document.getElementById('output');
+    function safelyGetElement(id) {
+      return document.getElementById(id);
+    }
 
-      function buildPrompt() {
+    window.addEventListener('DOMContentLoaded', () => {
+      const intentInput = safelyGetElement('intent');
+      const styleInput = safelyGetElement('style');
+      const targetInput = safelyGetElement('target');
+      const outputBox = safelyGetElement('outputBox');
+      const checkboxIds = ['markdown', 'stepwise', 'personality', 'concise'];
+      const checkboxes = checkboxIds.map(id => safelyGetElement(id)).filter(el => el);
+
+      function updatePrompt() {
+        if (!outputBox) return;
+
+        const intent = intentInput?.value.trim() || '';
+        const style = styleInput?.value || '';
+        const target = targetInput?.value || '';
+
         let prompt = '';
-        if (goal.value) prompt += `I want you to ${goal.value}.\n`;
-        if (context.value) prompt += `Here's the context: ${context.value}.\n`;
-        if (expect.value) prompt += `Please format it like this: ${expect.value}.\n`;
-        if (source.value) prompt += `Use this reference: ${source.value}`;
-        output.textContent = prompt || 'Your prompt will appear here as you fill in the fields above...';
+        if (intent) prompt += `Intent: ${intent}\n`;
+        if (style) prompt += `Style: ${style}\n`;
+        if (target) prompt += `Target AI: ${target}\n`;
+
+        if (checkboxes[0]?.checked) prompt += 'Use markdown formatting.\n';
+        if (checkboxes[1]?.checked) prompt += 'Apply step-by-step reasoning.\n';
+        if (checkboxes[2]?.checked) prompt += 'Make it expressive and full of personality.\n';
+        if (checkboxes[3]?.checked) prompt += 'Keep the response concise and to the point.';
+
+        outputBox.textContent = prompt.trim() || 'Your prompt will appear here...';
       }
 
-      goal.addEventListener('input', buildPrompt);
-      context.addEventListener('input', buildPrompt);
-      expect.addEventListener('input', buildPrompt);
-      source.addEventListener('input', buildPrompt);
-
-      window.copyPrompt = function () {
-        if (navigator.clipboard) {
-          navigator.clipboard.writeText(output.textContent).then(() => {
-            alert('Copied!');
-          }).catch(err => {
-            alert('Failed to copy: ' + err);
-          });
-        } else {
-          const textArea = document.createElement('textarea');
-          textArea.value = output.textContent;
-          document.body.appendChild(textArea);
-          textArea.focus();
-          textArea.select();
-          try {
-            document.execCommand('copy');
-            alert('Copied using fallback!');
-          } catch (err) {
-            alert('Fallback: Oops, unable to copy');
-          }
-          document.body.removeChild(textArea);
+      [intentInput, styleInput, targetInput, ...checkboxes].forEach(el => {
+        if (el) {
+          el.addEventListener('input', updatePrompt);
+          el.addEventListener('change', updatePrompt);
         }
+      });
+
+      function copyExample(button) {
+        const text = button.previousElementSibling.textContent;
+        navigator.clipboard.writeText(text).then(() => {
+          button.textContent = "Copied!";
+          setTimeout(() => (button.textContent = "Copy"), 2000);
+        });
       }
 
-      const tips = [
-        "💡 Prompt Tip: Be specific about the format you want.",
-        "🎯 Include your audience: 'Explain it to a non-technical user.'",
-        "📦 Add structure like lists, tables, or bullet points.",
-        "🧠 Tell the AI who it's acting as (e.g., 'You are a CTO...')",
-        "🚀 Prompt iteratively — refine as you go.",
-        "🧠 Honestly, anything could have been written here."
-      ];
-
-      let tipIndex = 0;
-      setInterval(() => {
-        tipIndex = (tipIndex + 1) % tips.length;
-        document.getElementById('carousel').textContent = tips[tipIndex];
-      }, 6000);
+      window.copyExample = copyExample; // expose to global for button inline usage
     });
   </script>
 </body>
