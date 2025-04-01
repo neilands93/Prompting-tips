@@ -19,18 +19,6 @@
       margin: 0;
       padding: 0;
     }
-    .checkbox-group {
-      margin-top: 1.5rem;
-    }
-    .checkbox-group label {
-      display: block;
-      margin-bottom: 0.5rem;
-      font-size: 0.95rem;
-      color: var(--text);
-    }
-    .checkbox-group input[type="checkbox"] {
-      margin-right: 0.5rem;
-    }
     #examples {
       padding: 4rem 2rem;
       background-color: var(--card);
@@ -112,53 +100,40 @@
   <section id="builder" style="padding: 2rem; max-width: 800px; margin: 0 auto;">
     <h2 style="text-align: center; color: var(--accent);">Build a Prompt</h2>
     <div class="field">
-      <label for="intent">Intent</label>
-      <input type="text" id="intent" placeholder="What should the AI do?" style="width: 100%; padding: 0.5rem; margin-bottom: 1rem; border-radius: 5px; border: 1px solid #444; background-color: #1e1e1e; color: var(--text);">
+      <label for="goal">Goal</label>
+      <input type="text" id="goal" placeholder="What do you want the AI to do?" style="width: 100%; padding: 0.5rem; margin-bottom: 1rem; border-radius: 5px; border: 1px solid #444; background-color: #1e1e1e; color: var(--text);">
     </div>
     <div class="field">
-      <label for="style">Style</label>
-      <select id="style" style="width: 100%; padding: 0.5rem; margin-bottom: 1rem; border-radius: 5px; border: 1px solid #444; background-color: #1e1e1e; color: var(--text);">
-        <option value="Informative">Informative</option>
-        <option value="Creative">Creative</option>
-        <option value="Professional">Professional</option>
-      </select>
+      <label for="context">Context</label>
+      <input type="text" id="context" placeholder="Why do you need this or how will it be used?" style="width: 100%; padding: 0.5rem; margin-bottom: 1rem; border-radius: 5px; border: 1px solid #444; background-color: #1e1e1e; color: var(--text);">
     </div>
     <div class="field">
-      <label for="target">Target AI</label>
-      <select id="target" style="width: 100%; padding: 0.5rem; margin-bottom: 1rem; border-radius: 5px; border: 1px solid #444; background-color: #1e1e1e; color: var(--text);">
-        <option value="ChatGPT">ChatGPT</option>
-        <option value="Claude">Claude</option>
-        <option value="Custom">Custom</option>
-      </select>
-    </div>
-    <div class="checkbox-group">
-      <label><input type="checkbox" id="markdown"> Use markdown formatting</label>
-      <label><input type="checkbox" id="stepwise"> Add step-by-step thinking</label>
-      <label><input type="checkbox" id="personality"> Inject personality</label>
-      <label><input type="checkbox" id="concise"> Keep it concise</label>
+      <label for="expectations">Expectations</label>
+      <input type="text" id="expectations" placeholder="Format, audience, or tone expected" style="width: 100%; padding: 0.5rem; margin-bottom: 1rem; border-radius: 5px; border: 1px solid #444; background-color: #1e1e1e; color: var(--text);">
     </div>
     <div style="margin-top: 2rem;">
       <h3>Generated Prompt</h3>
       <pre id="outputBox" style="background: #1e1e1e; padding: 1rem; border-radius: 10px; min-height: 100px; border-left: 4px solid var(--accent);">Your prompt will appear here...</pre>
     </div>
   </section>
+
   <!-- Examples Section -->
   <section id="examples">
     <h2>Prompt Examples</h2>
     <div class="example-grid">
       <div class="example-card">
-        <div class="example-intent">Summarize a research paper</div>
-        <div class="example-output">Summarize this research paper in plain English with bullet points. Use markdown formatting.</div>
+        <div class="example-intent">Summarize a Word document</div>
+        <div class="example-output">Summarize the attached Word document into bullet points and highlight key takeaways.</div>
         <button class="copy-btn" onclick="copyExample(this)">Copy</button>
       </div>
       <div class="example-card">
-        <div class="example-intent">Act as a tour guide</div>
-        <div class="example-output">You're a witty local tour guide in Rome. Share 3 interesting, lesser-known facts about the Colosseum.</div>
+        <div class="example-intent">Summarize an email thread</div>
+        <div class="example-output">Read through this email thread and summarize the main decisions and action items for the team.</div>
         <button class="copy-btn" onclick="copyExample(this)">Copy</button>
       </div>
       <div class="example-card">
-        <div class="example-intent">Code explanation</div>
-        <div class="example-output">Explain the following Python code to a beginner and include a line-by-line breakdown.</div>
+        <div class="example-intent">Rephrase professional message</div>
+        <div class="example-output">Rewrite this email in a professional tone suitable for internal stakeholders.</div>
         <button class="copy-btn" onclick="copyExample(this)">Copy</button>
       </div>
     </div>
@@ -179,34 +154,27 @@
     }
 
     window.addEventListener('DOMContentLoaded', () => {
-      const intentInput = safelyGetElement('intent');
-      const styleInput = safelyGetElement('style');
-      const targetInput = safelyGetElement('target');
+      const goal = safelyGetElement('goal');
+      const context = safelyGetElement('context');
+      const expectations = safelyGetElement('expectations');
       const outputBox = safelyGetElement('outputBox');
-      const checkboxIds = ['markdown', 'stepwise', 'personality', 'concise'];
-      const checkboxes = checkboxIds.map(id => safelyGetElement(id)).filter(el => el);
 
       function updatePrompt() {
         if (!outputBox) return;
 
-        const intent = intentInput?.value.trim() || '';
-        const style = styleInput?.value || '';
-        const target = targetInput?.value || '';
+        const goalText = goal?.value.trim() || '';
+        const contextText = context?.value.trim() || '';
+        const expectText = expectations?.value.trim() || '';
 
         let prompt = '';
-        if (intent) prompt += `Intent: ${intent}\n`;
-        if (style) prompt += `Style: ${style}\n`;
-        if (target) prompt += `Target AI: ${target}\n`;
-
-        if (checkboxes[0]?.checked) prompt += 'Use markdown formatting.\n';
-        if (checkboxes[1]?.checked) prompt += 'Apply step-by-step reasoning.\n';
-        if (checkboxes[2]?.checked) prompt += 'Make it expressive and full of personality.\n';
-        if (checkboxes[3]?.checked) prompt += 'Keep the response concise and to the point.';
+        if (goalText) prompt += `Goal: ${goalText}\n`;
+        if (contextText) prompt += `Context: ${contextText}\n`;
+        if (expectText) prompt += `Expectations: ${expectText}`;
 
         outputBox.textContent = prompt.trim() || 'Your prompt will appear here...';
       }
 
-      [intentInput, styleInput, targetInput, ...checkboxes].forEach(el => {
+      [goal, context, expectations].forEach(el => {
         if (el) {
           el.addEventListener('input', updatePrompt);
           el.addEventListener('change', updatePrompt);
@@ -221,7 +189,7 @@
         });
       }
 
-      window.copyExample = copyExample; // expose to global for button inline usage
+      window.copyExample = copyExample;
     });
   </script>
 </body>
