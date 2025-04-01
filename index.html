@@ -168,7 +168,35 @@
     }
   </style>
 </head>
+<script>
+  const toggle = document.getElementById('themeToggle');
+  const root = document.documentElement;
+
+  function setTheme(mode) {
+    root.setAttribute('data-theme', mode);
+    localStorage.setItem('theme', mode);
+    document.body.classList.toggle('light', mode === 'light');
+  }
+
+  toggle.addEventListener('click', () => {
+    const current = root.getAttribute('data-theme') === 'light' ? 'dark' : 'light';
+    setTheme(current);
+  });
+
+  const savedTheme = localStorage.getItem('theme') || 'dark';
+  setTheme(savedTheme);
+</script>
+
+  
 <body>
+  <div class="theme-toggle">
+  <div class="toggle-switch" id="themeToggle">
+    <svg id="sun" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="5"/><path d="M12 1v2m0 18v2m4.22-16.22l1.42 1.42M4.93 19.07l1.42 1.42M21 12h2M1 12H3m16.22 4.22l1.42 1.42M4.93 4.93l1.42 1.42"/></svg>
+    <svg id="moon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M21 12.79A9 9 0 0111.21 3a7 7 0 100 14 9 9 0 009.79-4.21z"/></svg>
+    <div class="toggle-knob"></div>
+  </div>
+</div>
+
   <section id="tips">
     <div id="carousel">💡 Prompt Tip: Be specific about the format you want.</div>
   </section>
