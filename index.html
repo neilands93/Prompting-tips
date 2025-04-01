@@ -89,44 +89,6 @@
       box-shadow: 0 0 10px var(--accent);
     }
 
-    #examples {
-      padding: 4rem 2rem;
-      text-align: center;
-      background-color: var(--card);
-    }
-
-    .example-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-      gap: 2rem;
-      max-width: 1000px;
-      margin: 0 auto;
-    }
-
-    .example-card {
-      background: var(--card);
-      backdrop-filter: blur(16px);
-      padding: 1.5rem;
-      border-radius: 12px;
-      box-shadow: 0 0 12px rgba(255, 255, 255, 0.05);
-      transition: transform 0.3s ease;
-    }
-
-    .example-card:hover {
-      transform: scale(1.02);
-    }
-
-    .example-intent {
-      font-weight: 600;
-      color: var(--accent);
-      margin-bottom: 0.5rem;
-    }
-
-    .example-output {
-      font-size: 0.95rem;
-      margin-bottom: 1rem;
-    }
-
     .copy-btn {
       padding: 0.5rem 1rem;
       border: 1px solid var(--accent);
@@ -140,31 +102,6 @@
     .copy-btn:hover {
       background: var(--accent);
       color: #fff;
-    }
-
-    footer {
-      padding: 2rem;
-      text-align: center;
-      font-size: 0.9rem;
-      color: var(--muted);
-      background-color: #0b0b0d;
-      border-top: 1px solid #1c1c1c;
-    }
-
-    footer a {
-      color: var(--accent);
-      text-decoration: none;
-      margin: 0 0.5rem;
-    }
-
-    footer a:hover {
-      text-decoration: underline;
-    }
-
-    @media (max-width: 600px) {
-      #builder {
-        padding: 1rem;
-      }
     }
   </style>
 </head>
@@ -187,39 +124,18 @@
       <label for="expectations">Expectations</label>
       <input type="text" id="expectations" placeholder="Format, audience, or tone expected">
     </div>
+    <div style="display: flex; justify-content: space-between; align-items: center;">
+      <button class="copy-btn" onclick="clearAll()">Clear All</button>
+      <button class="copy-btn" onclick="copyGeneratedPrompt()">Copy Prompt</button>
+    </div>
     <div>
       <h3>Generated Prompt</h3>
       <pre id="outputBox">Your prompt will appear here...</pre>
     </div>
   </section>
 
-  <section id="examples">
-    <h2>Prompt Examples</h2>
-    <div class="example-grid">
-      <div class="example-card">
-        <div class="example-intent">Summarize a Word document</div>
-        <div class="example-output">Summarize the attached Word document into bullet points and highlight key takeaways.</div>
-        <button class="copy-btn" onclick="copyExample(this)">Copy</button>
-      </div>
-      <div class="example-card">
-        <div class="example-intent">Summarize an email thread</div>
-        <div class="example-output">Read through this email thread and summarize the main decisions and action items for the team.</div>
-        <button class="copy-btn" onclick="copyExample(this)">Copy</button>
-      </div>
-      <div class="example-card">
-        <div class="example-intent">Rephrase professional message</div>
-        <div class="example-output">Rewrite this email in a professional tone suitable for internal stakeholders.</div>
-        <button class="copy-btn" onclick="copyExample(this)">Copy</button>
-      </div>
-    </div>
-  </section>
-
   <footer>
     Made by AI with style, put together by a human.<br>
-    <a href="#">GitHub</a> |
-    <a href="#">Feedback</a> |
-    <a href="#">Credits</a> |
-    <a href="#">Privacy</a>
   </footer>
 
   <script>
@@ -230,7 +146,7 @@
         "Break down large tasks into smaller ones.",
         "Mention the target audience.",
         "Say what not to do.",
-        "Use clear, action-oriented language.",
+        "Use clear, action-oriented language."
       ];
 
       const carousel = document.getElementById("carousel");
@@ -251,8 +167,8 @@
         const c = context.value.trim();
         const e = expectations.value.trim();
 
-        let prompt = "You are an AI assistant.";
-        if (g) prompt += ` Your task is to ${g.toLowerCase()}.`;
+        let prompt = "";
+        if (g) prompt += `Your task is to ${g.toLowerCase()}.`;
         if (c) prompt += ` This is needed because ${c.toLowerCase()}.`;
         if (e) prompt += ` Format your answer as ${e.toLowerCase()}.`;
 
@@ -265,12 +181,20 @@
         el.addEventListener('input', updatePrompt);
       });
 
-      window.copyExample = function(button) {
-        const text = button.previousElementSibling.textContent;
-        navigator.clipboard.writeText(text).then(() => {
-          button.textContent = "Copied!";
-          setTimeout(() => (button.textContent = "Copy"), 2000);
-        });
+      window.copyGeneratedPrompt = function () {
+        const text = outputBox.textContent;
+        if (text && text !== "Your prompt will appear here...") {
+          navigator.clipboard.writeText(text).then(() => {
+            alert("Prompt copied to clipboard!");
+          });
+        }
+      }
+
+      window.clearAll = function () {
+        goal.value = "";
+        context.value = "";
+        expectations.value = "";
+        outputBox.textContent = "Your prompt will appear here...";
       }
     });
   </script>
