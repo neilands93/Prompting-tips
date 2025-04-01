@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <title>Prompting Tips</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
   <script src="https://unpkg.com/lucide@latest"></script>
   <style>
@@ -67,6 +68,7 @@
 
     input[type="text"] {
       width: 100%;
+      max-width: 600px;
       padding: 0.7rem;
       margin-bottom: 1rem;
       border-radius: 8px;
@@ -83,6 +85,9 @@
 
     .field {
       margin-bottom: 1.5rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
     }
 
     #carousel {
@@ -118,6 +123,8 @@
       transition: box-shadow 0.4s ease;
       white-space: pre-wrap;
       word-wrap: break-word;
+      max-width: 600px;
+      margin: 0 auto;
     }
 
     #outputBox.highlight {
@@ -150,6 +157,24 @@
       position: relative;
       z-index: 1;
     }
+
+    @media (max-width: 768px) {
+      input[type="text"] {
+        font-size: 1rem;
+        padding: 0.6rem;
+        max-width: 90vw;
+      }
+
+      #outputBox {
+        font-size: 0.9rem;
+        padding: 1rem;
+      }
+
+      .copy-btn {
+        font-size: 0.9rem;
+        padding: 0.4rem 0.8rem;
+      }
+    }
   </style>
 </head>
 <body>
@@ -175,12 +200,12 @@
         <label for="expectations">Expectations</label>
         <input type="text" id="expectations" placeholder="Format, audience, or tone expected">
       </div>
-      <div style="display: flex; justify-content: space-between; align-items: center;">
+      <div style="display: flex; justify-content: space-between; align-items: center; max-width: 600px; margin: 0 auto 2rem auto;">
         <button class="copy-btn" id="clearBtn">Clear All</button>
         <button class="copy-btn" id="copyBtn">Copy Prompt</button>
       </div>
       <div>
-        <h3>Generated Prompt</h3>
+        <h3 style="text-align:center;">Generated Prompt</h3>
         <pre id="outputBox">Your prompt will appear here...</pre>
       </div>
     </section>
