@@ -227,10 +227,14 @@
       const outputBox = document.getElementById('outputBox');
 
       function updatePrompt() {
-        let prompt = '';
-        if (goal.value.trim()) prompt += `Goal: ${goal.value.trim()}\n`;
-        if (context.value.trim()) prompt += `Context: ${context.value.trim()}\n`;
-        if (expectations.value.trim()) prompt += `Expectations: ${expectations.value.trim()}\n`;
+        const g = goal.value.trim();
+        const c = context.value.trim();
+        const e = expectations.value.trim();
+
+        let prompt = "You are an AI assistant.";
+        if (g) prompt += ` Your task is to ${g.toLowerCase()}.`;
+        if (c) prompt += ` This is needed because ${c.toLowerCase()}.`;
+        if (e) prompt += ` Format your answer as ${e.toLowerCase()}.`;
 
         outputBox.textContent = prompt.trim() || 'Your prompt will appear here...';
         outputBox.classList.add('highlight');
