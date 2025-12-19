@@ -1,109 +1,123 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-
- <!-- Corrected Favicon and Manifest Links (removed leading slashes) -->
   <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
   <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
   <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
   <link rel="manifest" href="site.webmanifest">
-  <link rel="shortcut icon" href="favicon.ico"> <!-- Use shortcut icon or regular icon, both is okay but regular is more modern -->
-  <!-- Alternatively, a more modern single icon line: -->
-  <!-- <link rel="icon" href="favicon.ico" sizes="any"> -->
+  <link rel="shortcut icon" href="favicon.ico">
 
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Enhanced Prompt Builder</title> <!-- Keeping enhanced title for UI improvements -->
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+  <title>Enhanced Prompt Builder</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-  <div id="sidebar-left" class="neon-sidebar"></div>
-  <div id="sidebar-right" class="neon-sidebar"></div>
+  <header class="site-header">
+    <h1>AI Prompt Builder</h1>
+    <button id="theme-toggle" class="action-button theme-toggle" aria-label="Toggle Dark Mode">Theme</button>
+  </header>
 
-  <h1>AI Prompt Builder</h1>
+  <main class="main-layout">
+    <section class="builder-section">
+      <div class="tab-buttons" role="tablist">
+        <button role="tab" id="tab-classic" aria-controls="panel-classic" aria-selected="true" class="active">Classic</button>
+        <button role="tab" id="tab-combo" aria-controls="panel-combo" aria-selected="false">Combo</button>
+        <button id="random-btn" class="action-button random-btn" title="Surprise Me">🎲 Surprise Me</button>
+      </div>
 
-  <div class="tab-buttons" role="tablist">
-    <button role="tab" id="tab-classic" aria-controls="panel-classic" aria-selected="true" class="active">Classic Builder</button>
-    <button role="tab" id="tab-combo" aria-controls="panel-combo" aria-selected="false">Combo Builder</button>
-  </div>
+      <div id="panel-classic" role="tabpanel" aria-labelledby="tab-classic" class="tab-section active">
+        <div class="panel-header">
+          <h2>Classic Builder</h2>
+        </div>
+        <div class="form-group">
+          <label for="goal">Goal</label>
+          <input type="text" id="goal" placeholder="E.g., 'Summarize this text...'">
+        </div>
+        <div class="form-group">
+          <label for="context">Context</label>
+          <input type="text" id="context" placeholder="Optional background info...">
+        </div>
+        <div class="form-group">
+          <label for="expectations">Expectations</label>
+          <input type="text" id="expectations" placeholder="Tone, format, length...">
+        </div>
+        <div class="buttons">
+          <button class="action-button clear-classic">Clear</button>
+          <button class="action-button send-to-combo">Send to Combo</button>
+        </div>
+        <div class="output-container">
+            <div class="output" id="outputClassic" aria-live="polite"></div>
+            <button class="action-button copy-button" data-target="outputClassic">Copy</button>
+        </div>
+      </div>
 
-  <div id="panel-classic" role="tabpanel" aria-labelledby="tab-classic" class="tab-section active">
-    <h2>Classic Prompt Builder</h2>
-    <div class="form-group">
-      <label for="goal">Goal</label>
-      <!-- Removed name attribute, not needed without saving -->
-      <input type="text" id="goal" placeholder="Be specific: e.g., 'Summarize this text...', 'Brainstorm ideas for...'">
-    </div>
-    <div class="form-group">
-      <label for="context">Context</label>
-      <input type="text" id="context" placeholder="Optional: Background info, purpose...">
-    </div>
-    <div class="form-group">
-      <label for="expectations">Expectations</label>
-      <input type="text" id="expectations" placeholder="Optional: Tone, format, length...">
-    </div>
-    <div class="buttons">
-      <button class="action-button clear-classic">Clear Classic</button>
-      <button class="action-button send-to-combo">Send to Combo</button>
-    </div>
-    <div class="output" id="outputClassic" aria-live="polite">Your prompt will appear here...</div>
-    <div class="copy-under"><button class="action-button copy-button" data-target="outputClassic">Copy</button></div>
-  </div>
+      <div id="panel-combo" role="tabpanel" aria-labelledby="tab-combo" class="tab-section">
+        <div class="panel-header">
+            <h2>Prompt Combo</h2>
+        </div>
+        <div class="form-group">
+          <label for="task">Task</label>
+          <input type="text" id="task" placeholder="E.g., Explain quantum computing">
+        </div>
+        <div class="form-group">
+          <label for="reasoning">Reasoning</label>
+          <select id="reasoning">
+            <option value="">None</option>
+            <option value="step-by-step">Step-by-step</option>
+            <option value="compare">Compare and contrast</option>
+            <option value="proscons">List pros and cons</option>
+            <option value="hypothetical">Use a hypothetical scenario</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="role">Role</label>
+          <select id="role">
+            <option value="">None</option>
+            <option value="Strategic Advisor">Strategic Advisor</option>
+            <option value="Project Manager">Project Manager</option>
+            <option value="Business Analyst">Business Analyst</option>
+            <option value="Marketing Specialist">Marketing Specialist</option>
+            <option value="Subject Matter Expert">Subject Matter Expert</option>
+            <option value="Internal Communicator">Internal Communicator</option>
+            <option value="Code Reviewer">Code Reviewer</option>
+            <option value="Creative Writer">Creative Writer</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="format">Format</label>
+          <select id="format">
+            <option value="">None</option>
+            <option value="a bullet list">Bullet list</option>
+            <option value="a short paragraph">Short paragraph</option>
+            <option value="an executive summary">Executive summary</option>
+            <option value="a table">Table</option>
+            <option value="JSON">JSON</option>
+            <option value="Markdown">Markdown</option>
+          </select>
+        </div>
+        <div class="buttons">
+          <button class="action-button clear-combo">Clear</button>
+        </div>
+        <div class="output-container">
+            <div class="output" id="outputCombo" aria-live="polite"></div>
+            <button class="action-button copy-button" data-target="outputCombo">Copy</button>
+        </div>
+      </div>
+    </section>
 
-  <div id="panel-combo" role="tabpanel" aria-labelledby="tab-combo" class="tab-section">
-    <h2>Prompt Combo Builder</h2>
-    <div class="form-group">
-      <label for="task">What should the AI do?</label>
-      <input type="text" id="task" placeholder="e.g., Explain how AI helps warehouse planning">
-    </div>
-    <div class="form-group">
-      <label for="reasoning">Reasoning Style</label>
-      <select id="reasoning">
-        <option value="">None</option>
-        <option value="step-by-step">Step-by-step</option>
-        <option value="compare">Compare and contrast</option>
-        <option value="proscons">List pros and cons</option>
-        <option value="hypothetical">Use a hypothetical scenario</option>
-      </select>
-    </div>
-<div class="form-group">
-      <label for="role">Assume a Role</label>
-      <select id="role">
-        <option value="">None</option>
-        <option value="Strategic Advisor">Strategic Advisor</option>
-        <option value="Project Manager">Project Manager</option>
-        <option value="Business Analyst">Business Analyst</option>
-        <option value="Marketing Specialist">Marketing Specialist</option>
-        <option value="Subject Matter Expert">Subject Matter Expert</option>
-        <option value="Internal Communicator">Internal Communicator</option>
-      </select>
-    </div>
-    <div class="form-group">
-      <label for="format">Output Format</label>
-      <select id="format">
-        <option value="">None</option>
-        <option value="a bullet list">Bullet list</option>
-        <option value="a short paragraph">Short paragraph</option>
-        <option value="an executive summary">Executive summary</option>
-        <option value="a table">Table</option>
-      </select>
-    </div>
-    <div class="buttons">
-      <button class="action-button clear-combo">Clear Combo</button>
-    </div>
-    <div class="output" id="outputCombo" aria-live="polite">Your generated prompt will appear here...</div>
-    <div class="copy-under"><button class="action-button copy-button" data-target="outputCombo">Copy</button></div>
-  </div>
+    <aside id="history-container" class="history-sidebar">
+      <h3>History</h3>
+      <div id="history-list"></div>
+      <button id="clear-history" class="action-button small">Clear History</button>
+    </aside>
+  </main>
 
-  <!-- Removed Global Actions Area -->
-  <!--
-  <div class="global-actions">
-      Removed Button Here
-  </div>
-  -->
-
+  <div id="toast-container"></div>
   <script src="script.js" defer></script>
 </body>
 </html>
