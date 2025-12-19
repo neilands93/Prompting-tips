@@ -37,14 +37,111 @@ const sendToComboBtn = document.querySelector('.send-to-combo');
 const copyClassicBtn = document.querySelector('.copy-button[data-target="outputClassic"]');
 const clearComboBtn = document.querySelector('.clear-combo');
 const copyComboBtn = document.querySelector('.copy-button[data-target="outputCombo"]');
-// Removed resetAllBtn reference
+const themeToggleBtn = document.getElementById('theme-toggle');
+const randomBtn = document.getElementById('random-btn');
+const historyList = document.getElementById('history-list');
+const clearHistoryBtn = document.getElementById('clear-history');
 
 const placeholderClassic = "Your prompt will appear here...";
 const placeholderCombo = "Your generated prompt will appear here...";
+const HISTORY_KEY = 'promptBuilderHistory';
 const originalCopyText = 'Copy';
 const originalSendText = 'Send to Combo';
 
 // --- Function Definitions ---
+
+function saveHistory(promptText) {
+    if (!promptText || promptText === placeholderClassic || promptText === placeholderCombo) return;
+
+    let history = JSON.parse(localStorage.getItem(HISTORY_KEY) || '[]');
+    // Avoid duplicates at the top
+    if (history.length > 0 && history[0].text === promptText) return;
+
+    history.unshift({
+        text: promptText,
+        timestamp: new Date().toLocaleString()
+    });
+
+    if (history.length > 10) history.pop(); // Keep last 10
+
+    localStorage.setItem(HISTORY_KEY, JSON.stringify(history));
+    renderHistory();
+}
+
+function renderHistory() {
+    const history = JSON.parse(localStorage.getItem(HISTORY_KEY) || '[]');
+    historyList.innerHTML = '';
+
+    if (history.length === 0) {
+        historyList.innerHTML = '<p style="padding:10px; opacity:0.6;">No history yet.</p>';
+        return;
+    }
+
+    history.forEach((item) => {
+        const div = document.createElement('div');
+        div.className = 'history-item';
+        div.innerHTML = `<span class="timestamp">${item.timestamp}</span>${item.text.substring(0, 60)}...`;
+        div.addEventListener('click', () => {
+             // For simplicity, we just load it into the active tab's main input or clipboard
+             // Better: Copy to clipboard immediately
+             navigator.clipboard.writeText(item.text).then(() => showToast("Restored to clipboard!"));
+        });
+        historyList.appendChild(div);
+    });
+}
+
+function clearHistory() {
+    localStorage.removeItem(HISTORY_KEY);
+    renderHistory();
+    showToast("History cleared");
+}
+
+function randomizeInputs() {
+    const prompts = [
+        { task: "explain quantum computing", role: "Subject Matter Expert", format: "a short paragraph", reasoning: "step-by-step" },
+        { task: "write a python script to scrape a website", role: "Code Reviewer", format: "Markdown", reasoning: "step-by-step" },
+        { task: "draft a cold email to a potential client", role: "Marketing Specialist", format: "an executive summary", reasoning: "" },
+        { task: "analyze the benefits of remote work", role: "Business Analyst", format: "a bullet list", reasoning: "proscons" },
+        { task: "create a meal plan for a week", role: "Strategic Advisor", format: "a table", reasoning: "hypothetical" }
+    ];
+
+    const random = prompts[Math.floor(Math.random() * prompts.length)];
+
+    // Switch to Combo tab as it supports these fields best
+    switchTab('panel-combo');
+
+    comboTask.value = random.task;
+    comboRole.value = random.role;
+    comboFormat.value = random.format;
+    comboReasoning.value = random.reasoning;
+
+    updatePrompts();
+    saveInputs();
+    showToast("Random prompt generated!");
+}
+
+function toggleTheme() {
+    const body = document.body;
+    const isDark = body.getAttribute('data-theme') === 'dark';
+    body.setAttribute('data-theme', isDark ? 'light' : 'dark');
+    themeToggleBtn.textContent = isDark ? 'Theme: Light' : 'Theme: Dark';
+}
+
+function showToast(message) {
+    const container = document.getElementById('toast-container');
+    const toast = document.createElement('div');
+    toast.className = 'toast';
+    toast.textContent = message;
+    container.appendChild(toast);
+
+    // Remove after animation
+    setTimeout(() => {
+        toast.style.opacity = '0';
+        toast.style.transform = 'translateY(20px)';
+        toast.style.transition = 'all 0.3s ease';
+        setTimeout(() => toast.remove(), 300);
+    }, 3000);
+}
 
 function switchTab(targetPanelId) {
     tabPanels.forEach(panel => panel.classList.toggle('active', panel.id === targetPanelId));
@@ -86,21 +183,18 @@ function clearCombo() {
 async function copyText(elementId, button) {
     const textElement = document.getElementById(elementId);
     const textToCopy = textElement.textContent;
-    const originalText = originalCopyText;
-    resetButtonState(button, originalText);
+
     if (textToCopy === placeholderClassic || textToCopy === placeholderCombo || !textToCopy.trim()) {
-        button.textContent = "Nothing to copy!"; button.classList.add('feedback');
-        button._feedbackTimeoutId = setTimeout(() => { resetButtonState(button, originalText); }, 1500);
+        showToast("Nothing to copy!");
         return;
     }
     try {
         await navigator.clipboard.writeText(textToCopy);
-        button.textContent = "Copied!"; button.classList.add('feedback');
+        showToast("Copied to clipboard!");
+        saveHistory(textToCopy); // Save to history on successful copy
     } catch (err) {
         console.error("Clipboard copy failed: ", err);
-        button.textContent = "Copy Failed"; button.classList.add('feedback');
-    } finally {
-        button._feedbackTimeoutId = setTimeout(() => { resetButtonState(button, originalText); }, 1500);
+        showToast("Copy failed.");
     }
 }
 
@@ -209,8 +303,12 @@ clearComboBtn.addEventListener('click', clearCombo);
 sendToComboBtn.addEventListener('click', sendToCombo);
 copyClassicBtn.addEventListener('click', () => copyText('outputClassic', copyClassicBtn));
 copyComboBtn.addEventListener('click', () => copyText('outputCombo', copyComboBtn));
+themeToggleBtn.addEventListener('click', toggleTheme);
+randomBtn.addEventListener('click', randomizeInputs);
+clearHistoryBtn.addEventListener('click', clearHistory);
 // Removed Reset All listener
 
 // --- Initial Setup ---
 loadInputs();
+renderHistory();
 updatePrompts(); // Update display based on initial (empty) values
